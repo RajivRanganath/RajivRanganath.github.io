@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lost in orbit | Rajiv Ranganath</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23ffb23f%22/%3E%3Ctext x=%2216%22 y=%2221.5%22 font-family=%22monospace%22 font-size=%2214%22 font-weight=%22700%22 fill=%22%2305070b%22 text-anchor=%22middle%22%3ERR%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark'; } catch (e) {}</script>
+<style>
+:root { --bg: #05070b; --text: #eef1f5; --muted: #9ea8b7; --accent: #ffb23f; --dot: rgb(255 255 255 / .5); }
+:root[data-theme="light"] { --bg: #efece4; --text: #15171b; --muted: #5b5e64; --accent: #c2410c; --dot: rgb(21 23 27 / .45); }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100svh; display: grid; place-items: center; padding: 28px; background: var(--bg); color: var(--text); font: 500 13px/1.6 "JetBrains Mono", ui-monospace, monospace; overflow: hidden; }
+/* a slow field of drifting debris, pure CSS */
+body::before { content: ""; position: fixed; inset: -50%; background-image: radial-gradient(var(--dot) 1px, transparent 1.5px); background-size: 46px 46px; opacity: .35; animation: drift 90s linear infinite; }
+@keyframes drift { to { transform: translate(46px, 92px) rotate(4deg); } }
+main { position: relative; max-width: 760px; }
+p.k { margin: 0 0 18px; color: var(--accent); letter-spacing: .16em; text-transform: uppercase; }
+h1 { margin: 0 0 22px; font: 800 clamp(2.6rem, 9vw, 6rem)/.95 Archivo, "Arial Black", sans-serif; font-stretch: 125%; letter-spacing: -.03em; }
+h1 em { font: italic 400 1.14em/.9 "Instrument Serif", Georgia, serif; color: var(--accent); letter-spacing: -.01em; }
+p { margin: 0 0 30px; color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+a { display: inline-flex; gap: 10px; align-items: center; padding: 14px 24px; border-radius: 999px; background: var(--accent); color: var(--bg); text-decoration: none; font-weight: 500; letter-spacing: .06em; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
+</style>
+</head>
+<body>
+<main>
+  <p class="k">Signal lost &middot; 404</p>
+  <h1>This page drifted <em>out of orbit.</em></h1>
+  <p>The link may be old, or the page never existed. The rest of the mission is still on course.</p>
+  <a href="/">Return to the ground station &uarr;</a>
+</main>
+</body>
+</html>

@@ -6,10 +6,12 @@ Personal portfolio. Static files, no build step (libraries load from CDNs):
 - `js/world.js`: the Three.js world the page flies through (Earth, debris field, tracked objects, project satellites, the particle name, Bangalore uplink, bloom) and the camera director
 - `js/land.js`: generated land mask for Earth (Fibonacci-sphere bitmask, 7 KB)
 - `js/scope.js`: the live radar demo (two trackers on one noisy stream)
-- `js/main.js`: boot sequence, camera shots per section, GSAP scroll choreography, project data, case-file popups, contact form
+- `js/main.js`: boot sequence, camera shots per section, the veil and HUD (reticles, leader lines), GSAP + SplitText scroll choreography, project data and popups, contact form
 - `tracker.js`: tracking engine (Kalman filters, GNN via Hungarian, cheap JPDA)
 - `tracker.check.js`: self-check for the tracker math, run with `node tracker.check.js`
-- `assets/`: project screenshots
+- `assets/`: project screenshots (only `composio.jpg` is published; see below)
+- `og.jpg`: link preview image (1200x630, rendered from the live hero)
+- `404.html`: shown by GitHub Pages for unknown URLs
 - `resume.pdf`
 
 ## Deploy to GitHub Pages
@@ -32,7 +34,8 @@ create a free form at https://formspree.io, then paste its ID into `FORMSPREE_ID
 ## Updating
 
 - New resume: replace `resume.pdf`.
-- Work panels and case files: edit the `FILES` array at the top of `js/main.js`.
+- The eight smaller projects: edit the `MORE` array at the top of `js/main.js`. The four main projects are in `index.html`.
+- After a big visual change, re-render `og.jpg` from the hero at 1200x630.
 
 ## Source visuals and claim context
 
@@ -41,6 +44,6 @@ create a free form at https://formspree.io, then paste its ID into `FORMSPREE_ID
 - `assets/esg-evidence-flow.png`: project architecture figure from `Project(kgp)/docs/figures/fig1_topic1_architecture.png`.
 - `assets/marl-energy-freshness.png`: research figure from `FinalYearProject-MARL/results/figures/13_energy_vs_aoi.png`.
 
-The older portfolio stated 81.4% as verified ESG extraction accuracy. Project records describe that as a citation-presence proxy. The current copy instead labels the frozen 120/204 result as historical and pre-fix.
+The four images above are kept out of the repo (`.gitignore`): their numbers do not match the current claims.
 
-Canonical and social-preview URLs should be added after the public deployment address is verified.
+The IIT Kharagpur figure follows the resume wording: 62.7 to 81.4% verified accuracy across four locked test sets (a range, not an improvement over time). Older project records described 81.4% as a citation-presence proxy, so confirm the wording before publishing.

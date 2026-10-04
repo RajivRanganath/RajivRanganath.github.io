@@ -9,7 +9,14 @@
   let method = 'jpda', w = 0, h = 0, running = !reduceMotion, visible = false, sweep = 0, hover = null;
   const fade = [];   // recent detection batches for the phosphor afterglow
   const lostMarks = [];
-  const C = { grid: 'rgba(255,255,255,.045)', det: 'rgba(214,222,232,.55)', truth: 'rgba(255,255,255,.22)', acc: '#ffb23f', bad: '#ff5a4e' };
+  const PALETTE = {
+    dark: { grid: 'rgba(255,255,255,.045)', det: 'rgba(214,222,232,.55)', truth: 'rgba(255,255,255,.22)', acc: '#ffb23f', bad: '#ff5a4e',
+            sweep: 'rgba(255,178,63,.08)', sweep0: 'rgba(255,178,63,0)', sweepLine: 'rgba(255,178,63,.28)', trail: 'rgba(255,178,63,.45)', ell: 'rgba(255,178,63,.55)', box: 'rgba(8,10,14,.9)', boxText: '#c9d2de' },
+    light: { grid: 'rgba(14,19,27,.06)', det: 'rgba(40,52,70,.55)', truth: 'rgba(14,19,27,.25)', acc: '#c2650a', bad: '#d92d20',
+            sweep: 'rgba(217,119,6,.08)', sweep0: 'rgba(217,119,6,0)', sweepLine: 'rgba(180,83,9,.3)', trail: 'rgba(180,83,9,.5)', ell: 'rgba(180,83,9,.55)', box: 'rgba(255,255,255,.94)', boxText: '#2b3443' },
+  };
+  let C = PALETTE[document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'];
+  document.addEventListener('themechange', e => { C = PALETTE[e.detail]; draw(); });
 
   const resize = () => {
     const dpr = Math.min(devicePixelRatio || 1, 2), r = canvas.getBoundingClientRect();
@@ -34,8 +41,8 @@
     if (running) {
       const cx = w / 2, cy = h / 2, R = Math.hypot(w, h);
       const g = ctx.createConicGradient ? ctx.createConicGradient(sweep - 0.6, cx, cy) : null;
-      if (g) { g.addColorStop(0, 'rgba(255,178,63,0)'); g.addColorStop(0.095, 'rgba(255,178,63,.08)'); g.addColorStop(0.1, 'rgba(255,178,63,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h); }
-      ctx.strokeStyle = 'rgba(255,178,63,.28)'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke();
+      if (g) { g.addColorStop(0, C.sweep0); g.addColorStop(0.095, C.sweep); g.addColorStop(0.1, C.sweep0); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h); }
+      ctx.strokeStyle = C.sweepLine; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke();
     }
     // real returns and clutter look identical, as they do to the tracker
     fade.forEach((batch, k) => {
@@ -52,11 +59,11 @@
       t.dx += (t.x[0] - t.dx) * 0.25; t.dy += (t.x[1] - t.dy) * 0.25;
       const px = X(t.dx), py = Y(t.dy);
       if (t.trail.length > 1) {
-        ctx.strokeStyle = 'rgba(255,178,63,.45)'; ctx.lineWidth = 1.5; ctx.beginPath();
+        ctx.strokeStyle = C.trail; ctx.lineWidth = 1.5; ctx.beginPath();
         t.trail.forEach(([x, y], i) => i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)));
         ctx.lineTo(px, py); ctx.stroke();
       }
-      ctx.strokeStyle = 'rgba(255,178,63,.55)'; ctx.lineWidth = 1; ellipse(t.P, px, py); ctx.stroke();
+      ctx.strokeStyle = C.ell; ctx.lineWidth = 1; ellipse(t.P, px, py); ctx.stroke();
       ctx.fillStyle = C.acc; ctx.beginPath(); ctx.moveTo(px, py - 5); ctx.lineTo(px + 5, py); ctx.lineTo(px, py + 5); ctx.lineTo(px - 5, py); ctx.closePath(); ctx.fill();
       ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.fillText('T' + tg.id, px + 8, py - 7);
     }
@@ -94,19 +101,19 @@
       ctx.moveTo(x + sx * r, y + sy * (r - k)); ctx.lineTo(x + sx * r, y + sy * r); ctx.lineTo(x + sx * (r - k), y + sy * r);
     }
     ctx.stroke();
-    const lines = ['LOCK T' + tg.id + ' / ' + method.toUpperCase(),
-      'pos  ' + t.x[0].toFixed(1) + ', ' + t.x[1].toFixed(1),
-      'vel  ' + Math.hypot(t.x[2], t.x[3]).toFixed(2) + ' u/scan',
-      '1σ   ' + Math.sqrt((t.P[0][0] + t.P[1][1]) / 2).toFixed(2) + ' u',
-      'err  ' + Math.hypot(t.x[0] - tg.x, t.x[1] - tg.y).toFixed(2) + ' u vs truth'];
+    const lines = ['LOCKED ON OBJECT ' + tg.id,
+      'position   ' + t.x[0].toFixed(1) + ', ' + t.x[1].toFixed(1),
+      'speed      ' + Math.hypot(t.x[2], t.x[3]).toFixed(2),
+      'unsure by  \u00b1' + Math.sqrt((t.P[0][0] + t.P[1][1]) / 2).toFixed(2),
+      'off truth  ' + Math.hypot(t.x[0] - tg.x, t.x[1] - tg.y).toFixed(2)];
     ctx.font = '500 10.5px "JetBrains Mono", monospace';
-    const bw = 172, bh = lines.length * 15 + 12;
+    const bw = 190, bh = lines.length * 15 + 12;
     let bx = x + 22, by = y - bh / 2;
     if (bx + bw > w - 6) bx = x - 22 - bw;
     by = Math.max(6, Math.min(h - bh - 6, by));
-    ctx.fillStyle = 'rgba(8,10,14,.9)'; ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = C.box; ctx.fillRect(bx, by, bw, bh);
     ctx.strokeRect(bx + .5, by + .5, bw - 1, bh - 1);
-    lines.forEach((l, i) => { ctx.fillStyle = i ? '#c9d2de' : C.acc; ctx.fillText(l, bx + 10, by + 18 + i * 15); });
+    lines.forEach((l, i) => { ctx.fillStyle = i ? C.boxText : C.acc; ctx.fillText(l, bx + 10, by + 18 + i * 15); });
   }
 
   const el = id => document.getElementById(id);

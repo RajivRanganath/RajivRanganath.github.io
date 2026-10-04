@@ -1,5 +1,5 @@
 // Page choreography: boot, name formation, smooth scroll, camera shots for the 3D world,
-// scroll-driven scenes, station panels, case files, mission HUD, cursor.
+// scroll-driven scenes, theme switch, project dialogs, section rail, cursor.
 // Everything degrades: no WebGL -> DOM-only page; no GSAP -> static page; reduced motion -> final states.
 (function () {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -13,180 +13,99 @@
   const done = () => document.documentElement.classList.remove('booting');
   if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
 
-  /* ================= Work data ================= */
-  const FILES = [
-    { id: 'ledger', nm: 'LedgerGuard', repo: 'ledgerguard', tag: 'Razorpay AI Buildathon', one: 'A self-verifying AI finance controller. The model proposes; the ledger has to prove it.', big: '97.7%', bigLabel: 'disposition accuracy, up from 89.4%', stack: ['Python', 'FastAPI', 'LLMs', 'pytest'], vis: 'gate',
-      problem: 'An LLM can explain a financial discrepancy in two seconds. Nothing tells you whether that explanation is financially true.',
-      built: ['Shadow Ledger that reconstructs expected money movement from first principles, in integer paise, with six named invariants.', 'Deterministic engine that resolves 54 of 85 holdout cases with no AI involved.', 'Evidence Gate that re-proves every model hypothesis with 7 checks. The model can only downgrade a close, never create one.', 'Abstention as a designed outcome: unresolved cases export with rupee exposure and the missing evidence.'],
-      result: 'Disposition accuracy 89.4% to 97.7%. Across 5 investigators and 30 adversarial attempts: 0 false closures, INR 0.00. Without the gate: 25 of 30.',
-      links: [['GitHub', GH + 'ledgerguard'], ['No-gate ablation', GH + 'ledgerguard/blob/master/ledgerguard/evaluation/outputs/no_gate_ablation.md']] },
-    { id: 'orbit', nm: 'Orbit Guard AI', repo: 'Short-Arc-Space-Object-Tracking', tag: 'Space situational awareness', one: 'Real-time space debris tracking and collision warning from sparse, noisy observations.', big: '+11 to 14', bigLabel: 'points of association accuracy, JPDA over GNN', stack: ['NumPy', 'EnKF', 'FastAPI', 'Three.js'], vis: 'tracker',
-      problem: 'Tracking debris from sparse, noisy ground-station observations, and warning of collisions before they happen.',
-      built: ['200-particle Ensemble Kalman Filter with J2 oblateness, drag and solar radiation pressure.', 'Integrator verified against two-body physics: about 1e-12 energy and momentum drift over 24 hours.', 'GNN (Hungarian) for clean data and JPDA for clutter; B-plane collision alerts.', 'FastAPI WebSocket backend streaming to a React + Three.js 3D mission view.'],
-      result: 'JPDA beat GNN by 11 to 14 points of association accuracy in synthetic 8-object clutter, at 100% track stability.',
-      links: [['GitHub', GH + 'Short-Arc-Space-Object-Tracking']] },
-    { id: 'kgp', nm: 'LLM extraction, audited', repo: null, tag: 'IIT Kharagpur internship', one: 'ESG figures from sustainability reports, checked against official XBRL filings, with a failover chain that never invents a value.', big: '81.4%', bigLabel: 'verified accuracy against XBRL filings', stack: ['RAG', 'Camelot', 'XBRL', 'PPO', 'CI'], vis: 'chain',
-      problem: 'Company sustainability reports are long PDFs. Extracting their figures with an LLM is easy; knowing which ones are right is not.',
-      built: ['LLM/RAG extraction checked against official structured XBRL filings, with Camelot table verification.', 'Evaluation rebuilt after finding leakage: every answer must cite its source; 6-type hallucination taxonomy.', 'Capacity failover across five providers; the chain never emits a made-up value.', 'Five-agent PPO carbon-market simulation calibrated on 75 MoEFCC baselines.'],
-      result: '62.7% to 81.4% verified accuracy across four locked test sets. 284 tests in CI.', links: [] },
-    { id: 'marl', nm: 'Cooperative MARL', repo: 'FinalYearProject-MARL', tag: 'Final-year project', one: 'IQL, VDN and QMIX against seven heuristics on solar-powered sensors, with preregistered splits and an honest verdict.', big: '15 / 17', bigLabel: 'microcontrollers fit the ONNX policy', stack: ['PyTorch', 'EPyMARL', 'ONNX', 'pytest'], vis: 'mcu',
-      problem: 'When does cooperative multi-agent RL actually beat simple heuristics for scheduling solar-powered sensors? The experiment was set up so QMIX was not forced to win.',
-      built: ['25,474-parameter GRU policies trained with EPyMARL on four energy-harvesting nodes.', 'Eight sanity checks gate training; single-use 30-seed test splits and preregistered win criteria.', 'ONNX export and analytical sizing against 17 microcontrollers.'],
-      result: 'Unanimous-vote ensemble: +3.70 reward (95% CI [2.10, 5.30]). Still lost to a threshold rule by 4.95, with fresher data. Fits 15 of 17 MCUs at 0.25 to 6.8 ms per decision.',
-      links: [['GitHub', GH + 'FinalYearProject-MARL']] },
-    { id: 'agent', nm: 'Agent Console', icon: 'ph-broadcast', tag: 'Real-time UI', one: 'Streaming agent UI that never loses or doubles output through drops and reordering.', met: 'chaos-tested',
-      problem: 'A streaming agent server that drops, reorders and duplicates frames. The UI must never lose or double any output.',
-      built: ['Protocol engine outside React: sequence buffer orders and deduplicates frames.', 'Connection manager with heartbeats, backoff and resume from the last rendered sequence number.', 'React consumes ordered events once per animation frame; tool cards are immutable stream parts.'],
-      result: 'Tests cover ordering, gaps, duplicates, reversed delivery and resumed baselines. Verified against the server\'s chaos mode.', links: [['GitHub', GH + 'Agent_assignment']] },
-    { id: 'agency', nm: 'agencydesk', icon: 'ph-buildings', tag: 'Full stack', one: 'Multi-tenant agency and client platform where tenants provably can\'t see each other.', met: 'isolation tested',
-      problem: 'Agencies and clients share one system, and one tenant must never see another\'s data.',
-      built: ['FastAPI, SQLAlchemy and Alembic backend with JWT auth.', 'Tenant isolation and client-visibility rules, including a client shared across two agencies.'],
-      result: 'A dedicated test suite proves tenant isolation holds.', links: [['GitHub', GH + 'agencydesk'], ['Isolation tests', GH + 'agencydesk/blob/master/backend/tests/test_isolation.py']] },
-    { id: 'composio', nm: '100-app toolkit study', icon: 'ph-magnifying-glass', tag: 'Research', one: 'Auth, access and MCP readiness of 100 SaaS apps, with evidence for every claim.', met: '100 apps',
-      problem: 'Which SaaS apps can an agent toolkit actually integrate today, and what blocks the rest?',
-      built: ['Concurrent evidence-retrieval agent with provenance for every claim.', 'Independent human audit across all ten categories.'],
-      result: '73 apps ready now. Published the agent\'s raw 22% sample accuracy alongside the corrected data.',
-      links: [['Live case study', 'https://rajivranganath.github.io/composio-100-app-toolkit-research/'], ['GitHub', GH + 'composio-100-app-toolkit-research']], img: ['assets/composio.jpg', 'Screenshot of the live Composio 100-app toolkit case study'] },
-    { id: 'resume', nm: 'resume_extractor', icon: 'ph-file-text', tag: 'Privacy-first', one: 'Local, rule-based resume parser to JSON. No LLM calls, no network.', met: '29 tests',
-      problem: 'Resumes are personal data. Parsing them shouldn\'t require sending them anywhere.',
-      built: ['PDF and DOCX parsing, including two-column and sidebar layouts.', 'Section-aware field extractors and a curated skill taxonomy.'],
-      result: '29 tests pass, and an offline test runs with network sockets blocked to prove nothing leaves the machine.', links: [['GitHub', GH + 'resume_extractor']] },
-    { id: 'rpa', nm: 'Incident automation', icon: 'ph-factory', tag: 'Team capstone', one: 'Telemetry to work order to approval to verification, built contract-first by three people.', met: 'contract-first',
-      problem: 'Sensor telemetry to work orders to supervisor approval to closed-loop verification, built by three people in parallel.',
-      built: ['UiPath workflows with Node-RED and MQTT telemetry.', 'JSON-schema contracts between subsystems so each person could build independently.'],
-      result: 'End-to-end pipeline with human-in-the-loop governance and an audit log per incident.', links: [['GitHub', GH + 'RPA-project']] },
-    { id: 'plag', nm: 'Plagiarism detector', icon: 'ph-copy', tag: 'NLP', one: 'Lexical and semantic engines with sentence-level attribution to sources.', met: 'live demo',
-      problem: 'Catch both copied and paraphrased text, and show exactly which sentence came from where.',
-      built: ['TF-IDF and Jaccard for exact matches against local documents.', 'all-MiniLM-L6-v2 embeddings against live web sources.', 'Paraphrase-rewriting module.'],
-      result: 'Deployed on Streamlit.', links: [['Live demo (wakes in ~30s)', 'https://nlp-project-dkpqfn4ivbr3mfjjkb9h6m.streamlit.app/'], ['GitHub', GH + 'NLP-Project']] },
-    { id: 'gdpr', nm: 'GDPR compliance checker', icon: 'ph-scales', tag: 'LLM app', one: 'Legal document summaries, risk flags and Q&A over the document.', met: 'live demo',
-      problem: 'Legal documents are long; the risky clauses are what matter.',
-      built: ['Chunked LLM summaries and risk and clause detection.', 'Q&A over the document, FAISS-backed RAG helper, GDPR recital tracker.'],
-      result: 'Live on Hugging Face Spaces.', links: [['Live demo (wakes in ~30s)', 'https://huggingface.co/spaces/cs116/legal_document_summarization_final'], ['GitHub', GH + 'GDPR-Compliance-Checker']] },
-    { id: 'dr', nm: 'Retinopathy classifier', icon: 'ph-eye', tag: 'Medical imaging', one: 'Five-class DR grading on APTOS 2019 with a ResNet-152 backbone.', met: 'ResNet-152',
-      problem: 'Early screening prevents most severe vision loss from diabetic retinopathy.',
-      built: ['ResNet-152 backbone with a custom 512-d classification head.', 'Five grades from No DR to Proliferative.'],
-      result: 'Capstone of the E2E Management Services internship.', links: [['GitHub', GH + 'Diabetic-Retinopathy-Project']] },
-  ];
-
-  const VIS = {
-    gate: () => `<div class="v-gate"><ul>${['E1 records exist', 'E2 processed', 'E3 not linked', 'E4 customer match', 'E5 amount', 'E6 timing', 'E7 invariant']
-      .map((c, i) => `<li class="${i === 3 || i === 5 ? 'x' : ''}"><i class="ph-fill ${i === 3 || i === 5 ? 'ph-x-circle' : 'ph-check-circle'}"></i>${c}</li>`).join('')}</ul>
-      <div class="res"><s>25 / 30</s><b>0 / 30</b><span>false closures, <br>without vs with gate</span></div></div>`,
-    tracker: () => `<canvas class="mini-scope" aria-hidden="true"></canvas><span class="vis-tag">live, same engine as the demo</span>`,
-    chain: () => `<div class="v-chain"><div class="chain">${['Groq', 'Gemini', 'NVIDIA NIM', 'OmniRoute', 'Ollama'].map((n, i) => `<span class="node" style="--n:${i}">${n}</span>`).join('')}<span class="pulse"></span></div>
-      <p>rate-limited or failing? next provider. out of providers? mark it unresolved, never invent a value.</p></div>`,
-    mcu: () => `<div class="v-mcu"><div class="chips17">${Array.from({ length: 17 }, (_, i) => `<span class="chip17 ${i < 15 ? 'fit' : 'no'}" style="--n:${i}"></span>`).join('')}</div>
-      <p>ONNX policy fits <b>15 of 17</b> microcontrollers, 0.25 to 6.8 ms per decision</p></div>`,
-  };
-
-  FILES.slice(0, 4).forEach((f, i) => {
-    $(`#st${i + 1} .spanel`).innerHTML = `
-      <div class="sp-top"><span class="sp-idx">STATION 0${i + 1}</span><span class="badge ${f.repo ? '' : 'amber'}">${f.repo ? '<i class="ph ph-github-logo"></i>Public' : '<i class="ph ph-lock-simple"></i>Private'}</span></div>
-      <span class="badge amber">${esc(f.tag)}</span>
-      <h3>${esc(f.nm)}</h3>
-      <p class="sp-one">${esc(f.one)}</p>
-      <div class="sp-vis">${VIS[f.vis]()}</div>
-      <div class="sp-metric"><b>${esc(f.big)}</b><span>${esc(f.bigLabel)}</span></div>
-      <div class="tags">${f.stack.map(s => `<span class="tag">${esc(s)}</span>`).join('')}</div>
-      <button class="btn btn-ghost" data-open="${f.id}" data-cursor="Open">Open case file<i class="ph ph-arrow-up-right"></i></button>`;
+  /* ================= Theme ================= */
+  const root = document.documentElement, themeBtn = $('#themeBtn');
+  function setTheme(t) {
+    root.dataset.theme = t;
+    themeBtn.innerHTML = `<i class="ph ph-${t === 'light' ? 'moon' : 'sun'}"></i>`;
+    themeBtn.setAttribute('aria-label', t === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+    $('meta[name="theme-color"]').content = t === 'light' ? '#efece4' : '#05070b';
+    if (World.setTheme) World.setTheme(t === 'light');
+    document.dispatchEvent(new CustomEvent('themechange', { detail: t }));
+  }
+  setTheme(root.dataset.theme === 'light' ? 'light' : 'dark');
+  themeBtn.addEventListener('click', () => {
+    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    if (document.startViewTransition && !reduce) document.startViewTransition(() => setTheme(next));
+    else setTheme(next);
   });
-  $('#moreGrid').innerHTML = FILES.slice(4).map(f => `
-    <button class="card mini rv" data-open="${f.id}" data-cursor="Open">
-      <span class="top"><i class="ph ${f.icon} icon-orb"></i><i class="ph ph-arrow-up-right"></i></span>
+
+  /* ================= More projects (cards + detail dialogs) ================= */
+  const MORE = [
+    { id: 'agent', nm: 'Agent Console', tag: 'Real-time web app', one: 'A chat interface for an AI agent that never loses or repeats a message, even when the connection drops.', met: 'Survives dropped connections',
+      problem: 'The AI server streams messages that can arrive out of order, twice, or not at all when the connection breaks. The screen must still show everything exactly once, in order.',
+      built: ['A message engine (outside React) that puts messages back in order and removes duplicates.', 'Automatic reconnect that picks up from the last message shown, with heartbeats and back-off.', 'A smooth UI that updates once per frame, so fast streams never freeze the page.'],
+      result: 'Tested against the server\'s "chaos mode": dropped connections, reordered and duplicated messages.', stack: 'TypeScript, Next.js, React, WebSockets, Docker', links: [['Code', GH + 'Agent_assignment']] },
+    { id: 'agency', nm: 'agencydesk', tag: 'Full-stack app', one: 'Project management for agencies and their clients, where one client can never see another\'s data.', met: 'Tested for data leaks',
+      problem: 'Many agencies and their clients share one system. A single mistake could show one company\'s projects to another.',
+      built: ['Backend API with login, roles and database migrations.', 'Strict separation between agencies, including a client who works with two agencies at once.', 'A test suite whose job is to prove no data leaks across companies.'],
+      result: 'Isolation tests pass for every role and edge case.', stack: 'Python, FastAPI, SQLAlchemy, PostgreSQL, JWT', links: [['Code', GH + 'agencydesk'], ['Isolation tests', GH + 'agencydesk/blob/master/backend/tests/test_isolation.py']] },
+    { id: 'composio', nm: '100-app research study', tag: 'Research', one: 'Which of 100 popular software apps can AI agents actually connect to today, and what blocks the rest?', met: '100 apps, every claim sourced',
+      problem: 'Companies building AI agents need to know which apps they can integrate, and how hard each one is.',
+      built: ['A research agent that collects evidence for every app, with the source saved for each claim.', 'A human check of a sample across all ten categories.', 'A live, interactive case study.'],
+      result: '73 of 100 apps are ready now. I published the agent\'s raw 22% sample accuracy next to the corrected data.', stack: 'Python, HTML, data pipelines', links: [['Live study', 'https://rajivranganath.github.io/composio-100-app-toolkit-research/'], ['Code', GH + 'composio-100-app-toolkit-research']], img: ['assets/composio.jpg', 'Screenshot of the live 100-app study'] },
+    { id: 'resume', nm: 'Resume reader', tag: 'Privacy-first tool', one: 'Reads PDF and Word resumes into structured data, entirely on your computer. No AI service, no internet.', met: '29 tests, works offline',
+      problem: 'Resumes are personal data. Parsing them shouldn\'t mean sending them to someone else\'s server.',
+      built: ['Readers for PDF and Word files, including two-column layouts.', 'Rules that find name, contact details, skills, education and experience.', 'A test that blocks the network to prove nothing leaves the machine.'],
+      result: 'All 29 tests pass, including the offline test.', stack: 'Python, pdfplumber, python-docx', links: [['Code', GH + 'resume_extractor']] },
+    { id: 'rpa', nm: 'Incident automation', tag: 'Team project, automation', one: 'When a factory sensor reports a problem, this creates the work order, gets approval and checks the fix, automatically.', met: 'Built by 3 people in parallel',
+      problem: 'Turning a sensor alert into a fixed machine involves several systems and people, and steps get lost.',
+      built: ['Software robots (UiPath) that move each incident from alert to work order to approval.', 'Live sensor data through Node-RED and MQTT.', 'Clear data contracts between the three parts so each teammate could build independently.'],
+      result: 'A full loop from alert to verified fix, with a person approving each step and a log of everything.', stack: 'UiPath, Node-RED, MQTT, Python', links: [['Code', GH + 'RPA-project']] },
+    { id: 'plag', nm: 'Plagiarism detector', tag: 'Language AI', one: 'Catches both copied and reworded text, and shows exactly which sentence came from where.', met: 'Live demo',
+      problem: 'Simple checkers catch copy-paste but miss text that has been reworded.',
+      built: ['A word-matching check against local documents.', 'A meaning-based check (sentence embeddings) against the web, to catch rewording.', 'Sentence-by-sentence results with similarity scores.'],
+      result: 'Deployed as a web app. The free host sleeps when idle, so the first load takes about 30 seconds.', stack: 'Python, scikit-learn, Sentence Transformers, Streamlit', links: [['Live demo', 'https://nlp-project-dkpqfn4ivbr3mfjjkb9h6m.streamlit.app/'], ['Code', GH + 'NLP-Project']] },
+    { id: 'gdpr', nm: 'Legal document assistant', tag: 'AI app', one: 'Summarises legal documents, flags privacy (GDPR) risks and answers questions about them.', met: 'Live demo',
+      problem: 'Legal documents are long, and the risky clauses are easy to miss.',
+      built: ['AI summaries of long documents, section by section.', 'Risk and clause detection with charts.', 'Question answering over the document (RAG).'],
+      result: 'Live on Hugging Face. It sleeps when idle, so the first load takes about 30 seconds.', stack: 'Python, LLMs, FAISS, Streamlit', links: [['Live demo', 'https://huggingface.co/spaces/cs116/legal_document_summarization_final'], ['Code', GH + 'GDPR-Compliance-Checker']] },
+    { id: 'dr', nm: 'Eye disease classifier', tag: 'Medical imaging', one: 'Grades diabetic eye disease from retina photos into five levels, from none to severe.', met: 'Internship final project',
+      problem: 'Early screening prevents most severe vision loss from diabetes, but there aren\'t enough specialists to check every scan.',
+      built: ['A deep learning model (ResNet-152) adapted to retina photos.', 'Training and evaluation on the public APTOS 2019 dataset.'],
+      result: 'Final project of my deep learning internship at E2E Management Services.', stack: 'Python, PyTorch', links: [['Code', GH + 'Diabetic-Retinopathy-Project']] },
+  ];
+  $('#moreGrid').innerHTML = MORE.map((f, i) => `
+    <button class="mini rv" data-open="${f.id}" data-cursor="Open">
+      <span class="idx">${String(i + 1).padStart(2, '0')}</span>
+      <span class="m-main"><b>${esc(f.nm)}</b><span>${esc(f.one)}</span></span>
       <span class="badge">${esc(f.tag)}</span>
-      <h4>${esc(f.nm)}</h4>
-      <p>${esc(f.one)}</p>
       <span class="metric">${esc(f.met)}</span>
+      <i class="ph ph-arrow-up-right"></i>
     </button>`).join('');
 
-  /* case-file dialog */
   const dlg = $('#dlg');
   const list = items => '<ul>' + items.map(i => `<li>${esc(i)}</li>`).join('') + '</ul>';
   document.addEventListener('click', e => {
     const trigger = e.target.closest('[data-open]');
     if (!trigger) return;
-    const f = FILES.find(x => x.id === trigger.dataset.open);
+    const f = MORE.find(x => x.id === trigger.dataset.open);
     $('#dlgTag').textContent = f.tag;
     $('#dlgTitle').textContent = f.nm;
-    $('#dlgBody').innerHTML = `<p>${esc(f.problem)}</p><h4>WHAT I BUILT</h4>${list(f.built)}<h4>RESULT</h4><p>${esc(f.result)}</p>` +
+    $('#dlgBody').innerHTML = `<p>${esc(f.one)}</p><h4>THE PROBLEM</h4><p>${esc(f.problem)}</p><h4>WHAT I BUILT</h4>${list(f.built)}<h4>RESULT</h4><p>${esc(f.result)}</p><h4>TECH</h4><p>${esc(f.stack)}</p>` +
       (f.img ? `<img src="${f.img[0]}" alt="${esc(f.img[1])}" loading="lazy">` : '') +
-      `<div class="dlg-links">${f.links.length ? f.links.map(([l, u], i) => `<a class="btn ${i ? 'btn-ghost' : 'btn-primary'}" href="${u}" target="_blank" rel="noopener">${l === 'GitHub' ? '<i class="ph ph-github-logo"></i>' : '<i class="ph ph-arrow-up-right"></i>'}${esc(l)}</a>`).join('')
-        : '<span class="badge"><i class="ph ph-lock-simple"></i>Internship work, code private</span>'}</div>`;
+      `<div class="dlg-links">${f.links.map(([l, u], i) => `<a class="btn btn-sm ${i ? 'btn-ghost' : 'btn-primary'}" href="${u}" target="_blank" rel="noopener">${l === 'Code' ? '<i class="ph ph-github-logo"></i>' : '<i class="ph ph-arrow-up-right"></i>'}${esc(l)}</a>`).join('')}</div>`;
     dlg.showModal(); lenis && lenis.stop();
   });
   $('#dlgClose').addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
   dlg.addEventListener('close', () => lenis && lenis.start());
 
-  /* mini tracker in the Orbit Guard panel: same engine as the demo, heavy clutter, JPDA */
-  (function miniScope() {
-    const c = $('.mini-scope');
-    if (!c || !window.Tracker) return;
-    const ctx = c.getContext('2d');
-    const sim = Tracker.createSim({ seed: 42, width: 100, height: 45, clutter: 26, targets: 5 });
-    let w = 0, h = 0, visible = false, last = 0;
-    const resize = () => { const d = Math.min(devicePixelRatio || 1, 2), r = c.getBoundingClientRect(); w = r.width; h = r.height; c.width = w * d; c.height = h * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
-    const X = v => v / sim.W * w, Y = v => v / sim.H * h;
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = 'rgba(214,222,232,.45)';
-      for (const d of sim.detections) { ctx.beginPath(); ctx.arc(X(d.x), Y(d.y), 1.5, 0, 7); ctx.fill(); }
-      for (const tg of sim.targets) {
-        const t = tg.tracks.jpda; if (t.lost) continue;
-        ctx.strokeStyle = 'rgba(255,178,63,.5)'; ctx.lineWidth = 1.4; ctx.beginPath();
-        t.trail.forEach(([x, y], i) => i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y))); ctx.stroke();
-        const px = X(t.x[0]), py = Y(t.x[1]);
-        ctx.fillStyle = '#ffb23f'; ctx.beginPath(); ctx.moveTo(px, py - 4); ctx.lineTo(px + 4, py); ctx.lineTo(px, py + 4); ctx.lineTo(px - 4, py); ctx.fill();
-      }
-    };
-    const loop = now => { if (!visible) return; if (now - last > 240) { last = now; sim.step(); draw(); } requestAnimationFrame(loop); };
-    resize(); for (let i = 0; i < 25; i++) sim.step(); draw();
-    new ResizeObserver(() => { resize(); draw(); }).observe(c);
-    if (reduce) return;
-    new IntersectionObserver(([e]) => { const was = visible; visible = e.isIntersecting; if (visible && !was) requestAnimationFrame(loop); }).observe(c);
-  })();
-
-  /* ================= Forest plot (MARL final confirmation data) ================= */
-  (function forest() {
-    // [metric, raw advantage, raw CI low, raw CI high, d_z, d_z CI low, d_z CI high, Holm p]; positive = QMIX better
-    const ROWS = [
-      ['Energy use', -0.7533, -0.826, -0.6806, -3.869, -4.242, -3.495, 4.1e-18],
-      ['Redundant samples', -4.2667, -5.1379, -3.3954, -1.829, -2.202, -1.455, 6.4e-10],
-      ['Reward', -4.9506, -8.4413, -1.46, -0.53, -0.903, -0.156, 0.035],
-      ['Event recall', -0.0027, -0.0067, 0.0013, -0.249, -0.623, 0.124, 0.37],
-      ['Coverage', 0.0009, -0.0014, 0.0032, 0.139, -0.234, 0.512, 0.45],
-      ['Data freshness (AoI)', 0.3225, 0.1805, 0.4645, 0.848, 0.475, 1.221, 0.00048],
-    ];
-    const LO = -4.5, HI = 1.5, pct = v => (v - LO) / (HI - LO) * 100;
-    const verdict = r => r[7] >= 0.05 ? ['none', 'ph-minus-circle', 'too close to call'] : r[4] > 0 ? ['win', 'ph-check-circle', 'QMIX wins'] : ['loss', 'ph-x-circle', 'threshold wins'];
-    const fmt = v => (v > 0 ? '+' : '') + (Math.abs(v) < 0.01 ? v.toFixed(4) : v.toFixed(2));
-    const pfmt = p => p < 0.001 ? p.toExponential(1) : p.toFixed(3);
-    $('#forestRows').innerHTML = ROWS.map((r, i) => {
-      const [cls, icon, word] = verdict(r);
-      return `<div class="f-row ${cls}" tabindex="0" data-i="${i}" aria-label="${r[0]}: ${word}, d_z ${r[4]}, 95% CI ${r[5]} to ${r[6]}">
-        <span class="f-lab">${r[0]}</span>
-        <div class="f-track"><span class="f-zero" style="left:${pct(0)}%"></span><span class="f-ci" style="left:${pct(r[5])}%;width:${pct(r[6]) - pct(r[5])}%"></span><span class="f-dot" style="left:${pct(r[4])}%"></span></div>
-        <span class="f-verdict"><i class="ph ${icon}"></i><span>${word}</span></span></div>`;
-    }).join('');
-    $('#forestTicks').innerHTML = [-4, -3, -2, -1, 0, 1].map(t => `<span style="left:${pct(t)}%">${t > 0 ? '+' + t : t}</span>`).join('') +
-      `<em style="left:0">&larr; threshold<span class="f-long"> rule better</span></em><em style="right:0">QMIX<span class="f-long"> better</span> &rarr;</em>`;
-    $('#forestTable').innerHTML = '<tr><th>Metric</th><th>QMIX minus threshold</th><th>95% CI</th><th>d_z</th><th>Holm p</th></tr>' +
-      ROWS.map(r => `<tr><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])} to ${fmt(r[3])}</td><td>${r[4]}</td><td>${pfmt(r[7])}</td></tr>`).join('');
-    const fig = $('#forest'), tip = $('#forestTip');
-    const show = row => {
-      const r = ROWS[row.dataset.i], [, , word] = verdict(r);
-      tip.innerHTML = `<b>${r[0]}</b>: ${word}<br>difference ${fmt(r[1])} (95% CI ${fmt(r[2])} to ${fmt(r[3])})<br>d<sub>z</sub> ${r[4]}, Holm p ${pfmt(r[7])}`;
-      const fr = fig.getBoundingClientRect(), rr = row.getBoundingClientRect();
-      tip.style.left = Math.max(0, Math.min(rr.left - fr.left + rr.width / 2, fr.width - 290)) + 'px';
-      tip.style.top = rr.bottom - fr.top + 6 + 'px';
-      tip.classList.add('on');
-    };
-    $$('.f-row', fig).forEach(row => {
-      row.addEventListener('pointerenter', () => show(row)); row.addEventListener('focus', () => show(row));
-      row.addEventListener('pointerleave', () => tip.classList.remove('on')); row.addEventListener('blur', () => tip.classList.remove('on'));
-    });
-  })();
+  /* ================= Evidence Gate (real case pay_0048CBEF) ================= */
+  const GATE_REASON = 'The settlement shows a large refund adjustment of 1,272,670 paise, exactly matching the amount of an unlinked refund record. The shadow ledger expected no refunds, so the discrepancy can be explained by a refund that has not been linked to this payment.';
+  const CHECKS = [
+    ['The refund record exists', true, 'Found refund rfnd_003431D5'],
+    ['It was actually processed', true, 'Status: processed'],
+    ['It isn\'t matched to another payment', true, 'Not linked anywhere yet'],
+    ['It belongs to this customer', false, 'Refund says CUST-0081, this order is CUST-0011'],
+    ['The amount matches', true, '₹12,726.70 vs ₹12,726.70'],
+    ['The dates make sense', false, 'Refund dated 28 Jun, before the 30 Jun payment'],
+    ['The books balance', true, 'Applying it would balance the account'],
+  ];
+  $('#bubble').innerHTML = GATE_REASON.split(' ').map(w => `<span class="gw">${esc(w)}</span>`).join(' ');
+  $('#checks').innerHTML = CHECKS.map(([name, ok, d]) =>
+    `<li class="${ok ? 'pass' : 'fail'}"><span class="ic"><i class="ph ph-circle-dashed i-wait"></i><i class="ph-fill ${ok ? 'ph-check-circle' : 'ph-x-circle'} i-res"></i></span><span>${esc(name)}<span class="d">${esc(d)}</span></span></li>`).join('');
 
   /* ================= Text splitting ================= */
   // chars inside nowrap word wrappers, so words never break mid-line
@@ -245,18 +164,22 @@
     gsap.ticker.add(t => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
   }
-  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
-    const id = a.getAttribute('href'), target = id === '#top' ? 0 : $(id);
-    if (target === null) return;
-    e.preventDefault();
-    $('#navLinks').classList.remove('open');
+  const nav = $('#nav'), navLinks = $('#navLinks'), menuBtn = $('#menuBtn');
+  const goTo = target => {
     if (lenis) lenis.scrollTo(target, { duration: 2.2 });
     else if (target === 0) scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     else target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
-  }));
+  };
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href'), target = id === '#top' ? 0 : $(id);
+    if (target === null) return;
+    e.preventDefault(); navLinks.classList.remove('open'); menuBtn.setAttribute('aria-expanded', false);
+    goTo(target);
+  });
 
   /* ================= Nav ================= */
-  const nav = $('#nav'), navLinks = $('#navLinks'), menuBtn = $('#menuBtn');
   menuBtn.addEventListener('click', () => menuBtn.setAttribute('aria-expanded', navLinks.classList.toggle('open')));
   const links = $$('a', navLinks);
   links.forEach(a => a.addEventListener('pointerenter', () => scramble(a, 420)));
@@ -266,38 +189,13 @@
   }), { rootMargin: '-45% 0px -50% 0px' });
   $$('main > section[id]').forEach(s => spy.observe(s));
 
-  /* ================= Mission HUD: chapter + altitude read from the live camera ================= */
-  const CH = [['top', 'Launch'], ['approach', 'Approach'], ['demo', 'Orbit'], ['caught', 'Evidence'], ['st1', 'Stations'], ['more', 'Fleet'], ['calls', 'Ground'], ['contact', 'Uplink']];
-  const rail = $('#rail'), railName = $('#railName'), railAlt = $('#railAlt'), toast = $('#toast');
-  $('ol', rail).innerHTML = CH.map(([id, n], i) => `<li><a href="#${id}" aria-label="Chapter ${i}: ${n}"><span>0${i}</span></a></li>`).join('');
-  $$('a', rail).forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t = $(a.getAttribute('href')); lenis ? lenis.scrollTo(t, { duration: 2.2 }) : t.scrollIntoView(); }));
-  let chapter = 0;
-  const setChapter = i => {
-    chapter = i; railName.textContent = CH[i][1];
-    $$('li', rail).forEach((li, k) => li.classList.toggle('on', k === i));
-  };
+  /* ================= Section rail + altitude (live from the 3D camera) ================= */
+  const CH = [['top', 'Home'], ['about', 'About'], ['what', 'What I do'], ['experience', 'Experience'], ['p1', 'Projects'], ['more', 'More projects'], ['how', 'How I work'], ['skills', 'Skills'], ['contact', 'Contact']];
+  const rail = $('#rail'), railAlt = $('#railAlt');
+  $('ol', rail).innerHTML = CH.map(([id, n]) => `<li><a href="#${id}" aria-label="${n}"><span>${n}</span></a></li>`).join('');
+  const setChapter = i => $$('li', rail).forEach((li, k) => li.classList.toggle('on', k === i));
   setChapter(0);
   setInterval(() => { railAlt.textContent = Math.round(World.stats.alt || 0).toLocaleString('en-US'); }, 120);
-  World.on(ev => {
-    if (CH[chapter][0] !== 'demo') return;   // only while the tracked objects are on screen
-    toast.textContent = `CLOSE APPROACH  T${ev.a} x T${ev.b}  ${(ev.d * 6371).toFixed(0)} km`;
-    toast.classList.remove('on'); void toast.offsetWidth; toast.classList.add('on');
-  });
-
-  /* ================= Evidence Gate (real case pay_0048CBEF) ================= */
-  const GATE_REASON = 'The settlement shows a large refund adjustment of 1,272,670 paise, exactly matching the amount of an unlinked refund record. The shadow ledger expected no refunds, so the discrepancy can be explained by a refund that has not been linked to this payment.';
-  const CHECKS = [
-    ['E1', 'Evidence records exist', true, 'rfnd_003431D5 found in record store'],
-    ['E2', 'Refund is processed', true, 'status: processed'],
-    ['E3', 'Refund not linked elsewhere', true, 'payment_id is None'],
-    ['E4', 'Reference identifies this customer', false, "'CUST-0081/refund posted' vs order customer 'CUST-0011': NO MATCH"],
-    ['E5', 'Amount equals shortfall', true, '1,272,670 vs 1,272,670 paise'],
-    ['E6', 'Timing is plausible', false, 'refund dated 2026-06-28, before capture on 2026-06-30'],
-    ['E7', 'Ledger invariant restored', true, 'net with refund applied = observed net'],
-  ];
-  $('#bubble').innerHTML = GATE_REASON.split(' ').map(w => `<span class="gw">${esc(w)}</span>`).join(' ');
-  $('#checks').innerHTML = CHECKS.map(([id, name, ok, d]) =>
-    `<li class="${ok ? 'pass' : 'fail'}"><span class="ic"><i class="ph ph-circle-dashed i-wait"></i><i class="ph-fill ${ok ? 'ph-check-circle' : 'ph-x-circle'} i-res"></i></span><span>${id} ${esc(name)}<span class="d">${esc(d)}</span></span></li>`).join('');
 
   /* ================= Contact ================= */
   $('#copyMail').addEventListener('click', async e => {
@@ -325,17 +223,11 @@
     } catch { setStatus('Could not send right now. Please email ' + EMAIL + ' directly.', 'err'); }
     finally { btn.disabled = false; }
   });
+  const wm = $('.wordmark');
+  wm.addEventListener('pointermove', e => wm.style.setProperty('--wx', e.clientX - wm.getBoundingClientRect().left + 'px'));
+  wm.addEventListener('pointerleave', () => wm.style.removeProperty('--wx'));
 
-  /* ================= Pointer layer: spotlight, tilt, magnetic, cursor ================= */
-  $$('.card').forEach(card => {
-    const tilt = fine && !reduce && card.matches('.mini, .slot, .edu');
-    card.addEventListener('pointermove', e => {
-      const r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-      card.style.setProperty('--mx', x + 'px'); card.style.setProperty('--my', y + 'px');
-      if (tilt) card.style.transform = `perspective(900px) rotateX(${(.5 - y / r.height) * 6}deg) rotateY(${(x / r.width - .5) * 6}deg) translateY(-4px)`;
-    });
-    if (tilt) card.addEventListener('pointerleave', () => { card.style.transform = ''; });
-  });
+  /* ================= Pointer layer: magnetic buttons, cursor ================= */
   if (fine && !reduce && hasGSAP) {
     $$('.magnetic').forEach(b => {
       const xTo = gsap.quickTo(b, 'x', { duration: .6, ease: 'elastic.out(1,0.4)' }), yTo = gsap.quickTo(b, 'y', { duration: .6, ease: 'elastic.out(1,0.4)' });
@@ -348,7 +240,7 @@
     document.addEventListener('pointerleave', () => ring.classList.remove('on'));
     gsap.ticker.add(() => { x += (tx - x) * .2; y += (ty - y) * .2; ring.style.transform = `translate3d(${x}px, ${y}px, 0)`; });
     document.addEventListener('pointerover', e => {
-      const t = e.target.closest('a, button, [data-cursor], input, textarea, summary, .f-row');
+      const t = e.target.closest('a, button, [data-cursor], input, textarea, summary');
       const lab = t && t.dataset.cursor;
       ring.classList.toggle('hover', !!t && !lab); ring.classList.toggle('label', !!lab); label.textContent = lab || '';
       ring.classList.toggle('hide', !!e.target.closest('#scopeCanvas, dialog'));
@@ -368,21 +260,77 @@
     const shots = [
       { y0: 0, y1: 0, a: p.intro },
       { y0: vh * 0.6, y1: vh * 0.6, a: p.through },
-      sec('#approach', p.approach, p.approachEnd),
-      sec('#demo', p.orbit),
-      sec('#caught', p.gate, p.gateEnd),
-      ...p.stations.map((pose, i) => sec('#st' + (i + 1), pose)),
+      sec('#about', p.approach, p.approachEnd),
+      sec('#what', p.orbit),
+      sec('#experience', p.gate, p.gateEnd),
+      ...p.stations.map((pose, i) => sec('#p' + (i + 1), pose)),
       sec('#more', p.wide),
-      sec('#calls', p.ground, p.groundEnd, '#log'),
+      sec('#how', p.ground, p.groundEnd, '#skills'),
       sec('#contact', p.uplink),
     ];
     for (let i = 1; i < shots.length; i++) { shots[i].y0 = Math.max(shots[i].y0, shots[i - 1].y1); shots[i].y1 = Math.max(shots[i].y1, shots[i].y0); }
     World.shots = shots;
   }
 
-  /* 3D name + station labels, once the display fonts have loaded */
+  /* 3D name + satellite labels, once the display fonts have loaded */
   const fontsReady = (document.fonts ? Promise.all([document.fonts.load('800 100px Archivo'), document.fonts.load('600 40px "JetBrains Mono"')]).catch(() => {}) : Promise.resolve())
-    .then(() => { if (World.ok) { World.buildName(innerWidth / innerHeight < 0.9 ? ['RAJIV', 'RANGA', 'NATH'] : ['RAJIV', 'RANGANATH']); World.buildLabels(FILES.slice(0, 4).map(f => f.nm)); } });
+    .then(() => { if (World.ok) { World.buildName(innerWidth / innerHeight < 0.9 ? ['RAJIV', 'RANGA', 'NATH'] : ['RAJIV', 'RANGANATH']); World.buildLabels(['LedgerGuard', 'Orbit Guard', 'Report AI', 'Sensor AI']); } });
+
+  /* ================= HUD: reticles locked on the 3D objects, leader lines to the copy about them ================= */
+  if (World.ok && World.project && !reduce) {
+    const svg = $('#hud'), wide = matchMedia('(min-width: 1001px)');
+    const el = (tag, cls, g) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); cls && e.setAttribute('class', cls); g.append(e); return e; };
+    const NAMES = ['LEDGERGUARD', 'ORBIT GUARD', 'REPORT AI', 'SENSOR AI'];
+    const marks = [
+      { sec: $('#about'), pt: World.B, rad: 0.45, label: 'HOME BASE', sub: 'BANGALORE, INDIA', to: $('#about .fact:last-child b') },
+      ...World.stations.map((pt, i) => ({ sec: $('#p' + (i + 1)), pt, rad: 2.2, focus: i, label: `PROJECT 0${i + 1}`, sub: NAMES[i], to: $(`#p${i + 1} .pj-name`) })),
+    ].map(m => {
+      const g = el('g', '', svg), t1 = el('text', '', g), t2 = el('text', 'sb', g);
+      t1.textContent = m.label; t2.textContent = m.sub;
+      const dot = el('circle', '', g); dot.setAttribute('r', 3);
+      return Object.assign(m, { g, t1, t2, dot, w: 0, br: el('path', 'br', g), ld: el('path', 'ld', g) });
+    });
+    const clamp01 = v => Math.max(0, Math.min(1, v));
+    World.onFrame = () => {
+      const vh = innerHeight;
+      // read every rect first, then write, so the SVG updates never force extra layouts
+      marks.forEach(m => { m.r = m.sec.getBoundingClientRect(); m.a = wide.matches && m.to ? m.to.getBoundingClientRect() : null; });
+      for (const m of marks) {
+        const on = m.r.top < vh * 0.6 && m.r.bottom > vh * 0.4 && root.dataset.veil !== 'c';   // demos take the whole screen
+        m.w += ((on ? (m.focus === undefined ? 1 : World.focusW(m.focus)) : 0) - m.w) * 0.1;
+        const p = m.w > 0.01 && World.project(m.pt, m.rad);
+        m.g.style.opacity = p && p.on ? Math.min(1, m.w * 1.4) : 0;
+        if (!p || !p.on) continue;
+        // brackets close in on the target as the camera settles
+        const h = Math.max(16, p.r) * (1 + (1 - m.w) * 0.9), k = Math.min(14, h * 0.45);
+        const x0 = p.x - h, x1 = p.x + h, y0 = p.y - h, y1 = p.y + h;
+        m.br.setAttribute('d', `M${x0} ${y0 + k}V${y0}H${x0 + k}M${x1 - k} ${y0}H${x1}V${y0 + k}M${x1} ${y1 - k}V${y1}H${x1 - k}M${x0 + k} ${y1}H${x0}V${y1 - k}`);
+        m.t1.setAttribute('x', x0); m.t1.setAttribute('y', y0 - 24);
+        m.t2.setAttribute('x', x0); m.t2.setAttribute('y', y0 - 9);
+        // leader: from the reticle to the nearest visible point on the panel edge, 45 degrees then level
+        const a = m.a, lv = a ? clamp01((Math.min(a.bottom, vh - 40) - Math.max(a.top, 100)) / Math.min(120, a.height)) : 0;
+        if (!lv) { m.ld.style.opacity = m.dot.style.opacity = 0; continue; }
+        const pad = Math.min(36, a.height / 2), side = a.left > p.x ? 1 : -1, ax = side > 0 ? a.left : a.right;
+        const ay = Math.max(100, Math.min(vh - 40, Math.max(a.top + pad, Math.min(a.bottom - pad, p.y))));
+        const sx = p.x + side * h, sy = p.y, dy = ay - sy;
+        const bend = Math.abs(ax - sx) > Math.abs(dy) + 24, bx = sx + side * Math.abs(dy);
+        const len = bend ? Math.hypot(bx - sx, dy) + Math.abs(ax - bx) : Math.hypot(ax - sx, dy);
+        m.ld.setAttribute('d', bend ? `M${sx} ${sy}L${bx} ${ay}H${ax}` : `M${sx} ${sy}L${ax} ${ay}`);
+        m.ld.style.strokeDasharray = len; m.ld.style.strokeDashoffset = len * (1 - m.w);
+        m.ld.style.opacity = lv; m.dot.style.opacity = lv * m.w;
+        m.dot.setAttribute('cx', ax); m.dot.setAttribute('cy', ay);
+      }
+    };
+  }
+
+  /* ================= Veil: darkens the side of the screen the copy is on, so text needs no cards ================= */
+  const veiled = $$('[data-veil]');
+  const setVeil = () => {
+    const mid = innerHeight / 2; let v = '';
+    for (const el of veiled) { const r = el.getBoundingClientRect(); if (r.top < mid && r.bottom > mid) v = el.dataset.veil; }   // innermost wins
+    if ((root.dataset.veil || '') !== v) v ? root.dataset.veil = v : delete root.dataset.veil;
+  };
+  addEventListener('scroll', setVeil, { passive: true }); setVeil();
 
   /* ================= Without GSAP, or with reduced motion: final states ================= */
   if (!hasGSAP || reduce) {
@@ -395,13 +343,13 @@
 
   /* ================= Scroll choreography ================= */
   const mm = gsap.matchMedia();
-  const approachChars = splitChars($('#approach h2'));
+  const aboutChars = splitChars($('#about h2'));
   $$('h2.sw').forEach(h => splitWords(h));
   const mfWords = splitWords($('.mf'), 'mw');
   const bigChars = splitChars($('.contact .giant'));
 
   gsap.set('.intro-copy > *, .intro-stats', { opacity: 0, y: 26 });
-  gsap.set(approachChars, { yPercent: 115, opacity: 0 });
+  gsap.set(aboutChars, { yPercent: 115, opacity: 0 });
   gsap.set($$('h2.sw .w'), { yPercent: 110 });
   gsap.set('.rv', { opacity: 0, y: 44, filter: 'blur(8px)' });
 
@@ -421,7 +369,7 @@
   // ---- boot sequence (first visit per session only)
   function boot() {
     const loader = $('#loader');
-    if (!document.documentElement.classList.contains('booting') || !loader) { loader && loader.remove(); done(); return Promise.resolve(); }
+    if (!root.classList.contains('booting') || !loader) { loader && loader.remove(); done(); return Promise.resolve(); }
     try { sessionStorage.setItem('booted', '1'); } catch (e) {}
     lenis && lenis.stop();
     return new Promise(res => {
@@ -442,23 +390,48 @@
   }
   boot().then(intro);
 
-  // ---- intro copy leaves as the camera starts its dive
+  // ---- home copy leaves as the camera starts its dive
   gsap.to('.intro-copy, .intro-stats', { opacity: 0, y: -60, ease: 'none', scrollTrigger: { trigger: '#top', start: 'top top', end: '45% top', scrub: true } });
 
-  // ---- approach: headline rises, then the manifesto lights word by word while the stage is sticky
-  ScrollTrigger.create({ trigger: '#approach', start: 'top 60%', once: true, onEnter: () => gsap.to(approachChars, { yPercent: 0, opacity: 1, duration: 1.1, stagger: 0.022, ease: 'expo.out' }) });
-  gsap.fromTo(mfWords, { opacity: 0.12 }, { opacity: 1, stagger: 0.12, ease: 'none', scrollTrigger: { trigger: '#approach', start: '28% top', end: '82% bottom', scrub: 0.6 } });
+  // ---- about: headline rises, then the paragraph lights word by word while the stage is pinned
+  ScrollTrigger.create({ trigger: '#about', start: 'top 60%', once: true, onEnter: () => gsap.to(aboutChars, { yPercent: 0, opacity: 1, duration: 1.1, stagger: 0.022, ease: 'expo.out' }) });
+  gsap.fromTo(mfWords, { opacity: 0.18 }, { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: '#about', start: '20% top', end: '55% bottom', scrub: 0.6 } });
 
-  // ---- section headings: word mask reveal
+  // ---- section headings: word mask reveal; labels scramble in
   $$('h2.sw').forEach(h => gsap.to($$('.w', h), { yPercent: 0, duration: 1.1, ease: 'expo.out', stagger: 0.06, scrollTrigger: { trigger: h, start: 'top 86%', once: true } }));
-  $$('.eyebrow').forEach(e => ScrollTrigger.create({ trigger: e, start: 'top 90%', once: true, onEnter: () => scramble(e, 600) }));
+  $$('.eyebrow').forEach(e => ScrollTrigger.create({ trigger: e, start: 'top 90%', once: true, onEnter: () => scramble(e.lastElementChild || e, 600) }));
   ScrollTrigger.batch('.rv', { start: 'top 88%', once: true, onEnter: b => gsap.to(b, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out', stagger: 0.08 }) });
+
+  // ---- intro lines slide up through masks; project names rise letter by letter as the camera arrives (SplitText re-splits on resize)
+  if (window.SplitText) {
+    gsap.registerPlugin(SplitText);
+    $$('.lines').forEach(el => SplitText.create(el, { type: 'lines', mask: 'lines', autoSplit: true,
+      onSplit: s => gsap.from(s.lines, { yPercent: 105, duration: 1.1, ease: 'expo.out', stagger: 0.09, scrollTrigger: { trigger: el, start: 'top 88%', once: true } }) }));
+    $$('.pj-name').forEach(el => SplitText.create(el, { type: 'words,chars,lines', mask: 'lines', autoSplit: true,
+      onSplit: s => gsap.from(s.chars, { yPercent: 110, rotate: 8, duration: 1.2, ease: 'expo.out', stagger: 0.035, scrollTrigger: { trigger: el, start: 'top 85%', once: true } }) }));
+  }
+  ScrollTrigger.batch('.pj-stat', { start: 'top 85%', once: true, onEnter: b => b.forEach(el => $$('[data-count]', el).forEach(countUp)) });
+
+  // ---- big type leans a little with scroll speed, then settles
+  let vel = 0, skew = 0;
+  lenis && lenis.on('scroll', e => { vel = e.velocity; });
+  gsap.ticker.add(() => {
+    vel *= 0.9;
+    const goal = gsap.utils.clamp(-3, 3, vel * -0.15);
+    if (Math.abs(goal - skew) > 0.01) { skew += (goal - skew) * 0.15; root.style.setProperty('--skew', skew.toFixed(3)); }
+  });
+
+  // ---- project copy glides in from its side while the camera swings to the satellite
+  $$('.project').forEach(s => {
+    const side = s.classList.contains('left') ? -1 : 1, panel = $('.proj', s);
+    gsap.fromTo(panel, { x: side * 100, opacity: 0 }, { x: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: panel, start: 'top 95%', end: 'top 45%', scrub: 0.8 } });
+  });
 
   // ---- Evidence Gate: pinned and scrubbed on desktop, auto-played on small screens
   const items = $$('#checks li');
   mm.add('(min-width: 1001px)', () => {
-    gsap.set('#bubble .gw', { opacity: 0.07 }); gsap.set('#hyp, #verdictNote, #score', { opacity: 0 });
-    gsap.set(items, { opacity: 0.18 }); gsap.set('.i-res', { opacity: 0, scale: 0.4 });
+    gsap.set('#bubble .gw', { opacity: 0.08 }); gsap.set('#hyp, #verdictNote, #score', { opacity: 0 });
+    gsap.set(items, { opacity: 0.2 }); gsap.set('.i-res', { opacity: 0, scale: 0.4 });
     gsap.set('#stamp', { opacity: 0, scale: 2.8, rotate: -16, filter: 'blur(10px)' });
     const tl = gsap.timeline({ scrollTrigger: { trigger: '#gatePin', start: 'top top+=88', end: '+=230%', pin: true, scrub: 0.7 } });
     tl.to('#bubble .gw', { opacity: 1, stagger: 0.04, duration: 0.2, ease: 'none' })
@@ -468,8 +441,7 @@
       tl.to(li, { opacity: 1, duration: 0.25 })
         .to(li.querySelector('.i-wait'), { opacity: 0, duration: 0.1 }, '<0.1')
         .to(li.querySelector('.i-res'), { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(3)' }, '<');
-      if (fail) tl.to(li, { backgroundColor: 'rgba(255,90,78,.12)', duration: 0.15 }, '<')
-        .to('#gate', { keyframes: { x: [0, -8, 7, -5, 3, 0] }, duration: 0.3, ease: 'none' }, '<');
+      if (fail) tl.to('#gate', { keyframes: { x: [0, -8, 7, -5, 3, 0] }, duration: 0.3, ease: 'none' }, '<');
     });
     tl.to('#score', { opacity: 1, duration: 0.2 })
       .to('#stamp', { opacity: 1, scale: 1, rotate: -4, filter: 'blur(0px)', duration: 0.45, ease: 'back.out(2.2)' })
@@ -479,7 +451,7 @@
   });
   mm.add('(max-width: 1000px)', () => {
     const ws = $$('#bubble .gw');
-    gsap.set(ws, { opacity: 0.07 }); gsap.set(items, { opacity: 0.18 }); gsap.set('.i-res', { opacity: 0 });
+    gsap.set(ws, { opacity: 0.08 }); gsap.set(items, { opacity: 0.2 }); gsap.set('.i-res', { opacity: 0 });
     gsap.set('#hyp, #verdictNote, #score', { opacity: 0 }); gsap.set('#stamp', { opacity: 0, scale: 2.4 });
     const tl = gsap.timeline({ paused: true });
     tl.to(ws, { opacity: 1, stagger: 0.02, duration: 0.1 }).to('#hyp', { opacity: 1, duration: 0.3 });
@@ -493,41 +465,55 @@
   });
   ScrollTrigger.create({ trigger: '.gate-result', start: 'top 80%', once: true, onEnter: () => $$('.gate-result [data-count]').forEach(countUp) });
 
-  // ---- station panels glide in from their side while the camera swings to the satellite
-  $$('.station').forEach(s => {
-    const side = s.classList.contains('left') ? -1 : 1;
-    gsap.fromTo($('.spanel', s), { x: side * 120, opacity: 0 }, { x: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: s, start: 'top 85%', end: 'top 25%', scrub: 0.8 } });
-  });
+  // ---- the world spells a word beside the row you're reading (wide screens); that row stays lit, the rest recede
+  const glyphGroups = $$('[data-glyphs]'), how = $('#how');
+  glyphGroups.forEach(g => { g._items = $$('[data-glyph]', g); });
+  how.dataset.glyph = '01';
+  let glyphOn = null;
+  function setGlyph() {
+    const wide = innerWidth > 900 && innerWidth / innerHeight >= 0.9;
+    if (wide !== glyphOn) { glyphOn = wide; glyphGroups.forEach(g => g.classList.toggle('glyphs-on', wide)); }
+    if (!World.glyph) return;
+    const mid = innerHeight / 2; let word = '';
+    for (const g of glyphGroups) {
+      const r = g.getBoundingClientRect();
+      if (!wide || r.top > mid || r.bottom < mid) continue;
+      if (!g._items.length) { word = g.dataset.glyph; continue; }
+      let best = null, bd = Infinity;
+      for (const el of g._items) { const q = el.getBoundingClientRect(), d = Math.abs((q.top + q.bottom) / 2 - mid); if (d < bd) { bd = d; best = el; } }
+      g._items.forEach(el => el.classList.toggle('is-on', el === best));
+      word = best.dataset.glyph;
+    }
+    World.glyph(word);
+  }
+  fontsReady.then(() => { addEventListener('scroll', setGlyph, { passive: true }); addEventListener('resize', setGlyph); setGlyph(); });
 
-  // ---- velocity marquee: speed and skew follow how fast you scroll
-  let vel = 0;
-  lenis && lenis.on('scroll', e => { vel = e.velocity; });
-  $$('.vrow').forEach((row, i) => {
-    const track = $('.vtrack', row), dir = i % 2 ? 1 : -1; let x = dir > 0 ? -track.scrollWidth / 2 : 0;
-    gsap.ticker.add(() => {
-      const half = track.scrollWidth / 2; if (!half) return;
-      x += dir * (0.6 + Math.min(Math.abs(vel), 60) * 0.3);
-      if (x <= -half) x += half; if (x > 0) x -= half;
-      track.style.transform = `translate3d(${x}px,0,0) skewX(${gsap.utils.clamp(-12, 12, vel * -0.35)}deg)`;
-    });
-  });
-  gsap.ticker.add(() => { vel *= 0.92; });
+  // ---- skills: each row's tools land one after another
+  $$('.slot').forEach(row => gsap.from($$('.tools span', row), { opacity: 0, y: 14, duration: 0.7, ease: 'power3.out', stagger: 0.035, scrollTrigger: { trigger: row, start: 'top 88%', once: true } }));
 
-  // ---- hard calls: sticky stack, earlier cards recede as the next one lands
-  mm.add('(min-width: 901px)', () => {
-    const cards = $$('.scard');
-    cards.forEach((c, i) => {
-      if (i === cards.length - 1) return;
-      gsap.to(c, { scale: 0.92, filter: 'brightness(0.35)', ease: 'none', scrollTrigger: { trigger: cards[i + 1], start: 'top bottom', end: 'top 20%', scrub: true } });
-    });
+  // ---- how I work: the stage pins and the five stories crossfade in place while the camera glides over the ground
+  root.classList.add('stories-on');
+  const stories = $$('.story'), ticks = $$('.st-ticks i');
+  gsap.set(stories.slice(1), { autoAlpha: 0, y: 40 });
+  const stl = gsap.timeline({
+    scrollTrigger: { trigger: '#how', start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+    onUpdate() {
+      const k = Math.max(0, Math.min(stories.length - 1, Math.floor(this.time() - 0.3)));
+      ticks.forEach((t, i) => t.classList.toggle('on', i <= k));
+      if (how.dataset.glyph !== '0' + (k + 1)) { how.dataset.glyph = '0' + (k + 1); setGlyph(); }
+    },
   });
-  $$('.scard .sc-verdict').forEach(v => ScrollTrigger.create({ trigger: v, start: 'top 80%', once: true, onEnter: () => scramble(v, 800) }));
+  stories.forEach((st, i) => { if (i) stl.to(stories[i - 1], { autoAlpha: 0, y: -40, duration: 0.4 }, i).to(st, { autoAlpha: 1, y: 0, duration: 0.4 }, i + 0.25); });
+  stl.to({}, { duration: 0.7 });
+
+  // ---- section headings dissolve as they leave, instead of sliding under the nav
+  $$('.sec-head, .proj-head').forEach(h => gsap.fromTo(h, { opacity: 1, y: 0 }, { opacity: 0, y: -50, ease: 'none', immediateRender: false, scrollTrigger: { trigger: h, start: 'bottom 30%', end: 'bottom top', scrub: true } }));
 
   gsap.fromTo('.tl-fill', { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.tl', start: 'top 70%', end: 'bottom 55%', scrub: true } });
   gsap.fromTo(bigChars, { yPercent: 120, rotate: 8, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, stagger: 0.03, ease: 'none',
     scrollTrigger: { trigger: '.contact', start: 'top 85%', end: 'top 25%', scrub: 0.8 } });
 
-  // ---- chapters for the HUD rail
+  // ---- section rail
   CH.forEach(([id], i) => ScrollTrigger.create({ trigger: '#' + id, start: 'top 50%', end: 'bottom 50%', onToggle: s => s.isActive && setChapter(i) }));
 
   // camera shots depend on final layout (pins add spacing), so rebuild on every refresh
