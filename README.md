@@ -46,4 +46,4 @@ create a free form at https://formspree.io, then paste its ID into `FORMSPREE_ID
 
 The four images above are kept out of the repo (`.gitignore`): their numbers do not match the current claims.
 
-The IIT Kharagpur figure follows the resume wording: 62.7 to 81.4% verified accuracy across four locked test sets (a range, not an improvement over time). Older project records described 81.4% as a citation-presence proxy, so confirm the wording before publishing.
+IIT Kharagpur figures follow the current resume (checked 22 Oct 2026 against the project paper): certified values match XBRL 97.5% on development and 93.3 to 100% on three of four locked holdouts (51.7% on the fourth, reported); 337 tests. Lead with certified precision, not the raw 62.7 to 81.4% accuracy.
