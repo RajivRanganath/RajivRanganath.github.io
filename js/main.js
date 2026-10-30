@@ -33,10 +33,10 @@
 
   /* ================= More projects (cards + detail dialogs) ================= */
   const MORE = [
-    { id: 'agent', nm: 'Agent Console', tag: 'Real-time web app', one: 'A chat interface for an AI agent that never loses or repeats a message, even when the connection drops.', met: 'Survives dropped connections',
-      problem: 'The AI server streams messages that can arrive out of order, twice, or not at all when the connection breaks. The screen must still show everything exactly once, in order.',
-      built: ['A message engine (outside React) that puts messages back in order and removes duplicates.', 'Automatic reconnect that picks up from the last message shown, with heartbeats and back-off.', 'A smooth UI that updates once per frame, so fast streams never freeze the page.'],
-      result: 'Tested against the server\'s "chaos mode": dropped connections, reordered and duplicated messages.', stack: 'TypeScript, Next.js, React, WebSockets, Docker', links: [['Code', GH + 'Agent_assignment']] },
+    { id: 'sensor', nm: 'Sensor AI', tag: 'Final-year project, research', one: 'Can a team of AI agents run solar-powered sensors better than a simple rule? I built a fair test to find out.', met: 'Fits 15 of 17 microcontrollers',
+      problem: 'Battery-powered sensors must decide when to measure and when to sleep. Teams of AI agents (multi-agent reinforcement learning) promise smarter teamwork, but do they beat a simple rule?',
+      built: ['Trained three kinds of AI teams and compared them with seven simple rules.', 'Locked the test data and the win criteria before running anything.', 'Shrank the model to run on small chips (0.25 to 6.8 ms per decision).'],
+      result: 'The simple rule won on the main score (\u22124.95, 95% CI \u22128.44 to \u22121.46); my AI team kept data fresher. Both are in the report.', stack: 'PyTorch, reinforcement learning, ONNX, pytest', links: [['Code', GH + 'FinalYearProject-MARL'], ['Full report', GH + 'FinalYearProject-MARL/blob/main/FINAL_RESEARCH_REPORT.md']] },
     { id: 'agency', nm: 'agencydesk', tag: 'Full-stack app', one: 'Project management for agencies and their clients, where one client can never see another\'s data.', met: 'Tested for data leaks',
       problem: 'Many agencies and their clients share one system. A single mistake could show one company\'s projects to another.',
       built: ['Backend API with login, roles and database migrations.', 'Strict separation between agencies, including a client who works with two agencies at once.', 'A test suite whose job is to prove no data leaks across companies.'],
@@ -274,13 +274,13 @@
 
   /* 3D name + satellite labels, once the display fonts have loaded */
   const fontsReady = (document.fonts ? Promise.all([document.fonts.load('800 100px Archivo'), document.fonts.load('600 40px "JetBrains Mono"')]).catch(() => {}) : Promise.resolve())
-    .then(() => { if (World.ok) { World.buildName(innerWidth / innerHeight < 0.9 ? ['RAJIV', 'RANGA', 'NATH'] : ['RAJIV', 'RANGANATH']); World.buildLabels(['LedgerGuard', 'Orbit Guard', 'Report AI', 'Sensor AI']); } });
+    .then(() => { if (World.ok) { World.buildName(innerWidth / innerHeight < 0.9 ? ['RAJIV', 'RANGA', 'NATH'] : ['RAJIV', 'RANGANATH']); World.buildLabels(['LedgerGuard', 'Orbit Guard', 'Report AI', 'Agent Console']); } });
 
   /* ================= HUD: reticles locked on the 3D objects, leader lines to the copy about them ================= */
   if (World.ok && World.project && !reduce) {
     const svg = $('#hud'), wide = matchMedia('(min-width: 1001px)');
     const el = (tag, cls, g) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); cls && e.setAttribute('class', cls); g.append(e); return e; };
-    const NAMES = ['LEDGERGUARD', 'ORBIT GUARD', 'REPORT AI', 'SENSOR AI'];
+    const NAMES = ['LEDGERGUARD', 'ORBIT GUARD', 'REPORT AI', 'AGENT CONSOLE'];
     const marks = [
       { sec: $('#about'), pt: World.B, rad: 0.45, label: 'HOME BASE', sub: 'BANGALORE, INDIA', to: $('#about .fact:last-child b') },
       ...World.stations.map((pt, i) => ({ sec: $('#p' + (i + 1)), pt, rad: 2.2, focus: i, label: `PROJECT 0${i + 1}`, sub: NAMES[i], to: $(`#p${i + 1} .pj-name`) })),
@@ -358,12 +358,12 @@
     gsap.to(o, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: () => el.textContent = o.v.toFixed(dec) });
   }
   function intro() {
-    fontsReady.then(() => gsap.to(World.name, { form: 1, duration: 3.6, ease: 'power2.inOut' }));
+    fontsReady.then(() => gsap.to(World.name, { form: 1, duration: 1.8, ease: 'power2.inOut' }));
     gsap.timeline({ defaults: { ease: 'expo.out' } })
-      .to('.intro-copy > *', { opacity: 1, y: 0, duration: 1.1, stagger: 0.1 }, 1.4)
-      .to('.intro-stats', { opacity: 1, y: 0, duration: 1.1 }, 1.7)
-      .add(() => $$('.intro-stats [data-count]').forEach(countUp), 1.8)
-      .from('#rail', { opacity: 0, x: 20, duration: 1 }, 1.9);
+      .to('.intro-copy > *', { opacity: 1, y: 0, duration: 1.1, stagger: 0.1 }, 0.3)
+      .to('.intro-stats', { opacity: 1, y: 0, duration: 1.1 }, 0.5)
+      .add(() => $$('.intro-stats [data-count]').forEach(countUp), 0.6)
+      .from('#rail', { opacity: 0, x: 20, duration: 1 }, 0.7);
   }
 
   // ---- boot sequence (first visit per session only)
@@ -376,15 +376,15 @@
       const num = $('#ldNum'), tr = $('#ldTracks'), o = { p: 0 };
       const clock = setInterval(() => { $('#ldClock').textContent = 'BLR ' + new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata' }); }, 250);
       gsap.timeline()
-        .from('.ld-log li', { opacity: 0, x: -12, stagger: 0.26, duration: 0.3, ease: 'power2.out' }, 0)
-        .to(o, { p: 100, duration: 1.55, ease: 'power2.inOut', onUpdate: () => {
+        .from('.ld-log li', { opacity: 0, x: -12, stagger: 0.08, duration: 0.2, ease: 'power2.out' }, 0)
+        .to(o, { p: 100, duration: 0.6, ease: 'power2.inOut', onUpdate: () => {
           num.textContent = String(Math.round(o.p)).padStart(3, '0');
           $('#ldBar').style.transform = `scaleX(${o.p / 100})`;
           tr.textContent = Math.min(6, Math.floor(o.p / 16.6)) + '/6';
         } }, 0)
-        .to('.ld-lock', { opacity: 1, duration: 0.12, repeat: 3, yoyo: true }, '>-0.05')
+        .to('.ld-lock', { opacity: 1, duration: 0.1 }, '>-0.05')
         .add(() => { res(); lenis && lenis.start(); })
-        .to('#loader', { clipPath: 'inset(0% 0% 100% 0%)', duration: 1.05, ease: 'expo.inOut' }, '<')
+        .to('#loader', { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.5, ease: 'expo.inOut' }, '<')
         .add(() => { clearInterval(clock); loader.remove(); done(); });
     });
   }

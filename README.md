@@ -12,7 +12,7 @@ Personal portfolio. Static files, no build step (libraries load from CDNs):
 - `assets/`: project screenshots (only `composio.jpg` is published; see below)
 - `og.jpg`: link preview image (1200x630, rendered from the live hero)
 - `404.html`: shown by GitHub Pages for unknown URLs
-- `resume.pdf`
+- `resume.pdf` (SWE resume) and `resume-ai.pdf` (AI/ML resume)
 
 ## Deploy to GitHub Pages
 

@@ -410,7 +410,7 @@ html:not(.webgl) .name-fallback { display: block; position: absolute; top: 30svh
 @media (max-width: 640px) { .edu { grid-template-columns: minmax(0, 1fr) auto; } .edu .badge { grid-row: auto; grid-column: 1 / -1; margin-bottom: 4px; } .edu p { grid-column: 1; } .edu .score { grid-column: 2; grid-row: 2 / span 2; font-size: 1.6rem; } }
 
 /* ---------- Projects: copy beside each satellite ---------- */
-.project { padding-block: 16vh; min-height: 120vh; }
+.project { padding-block: 12vh; min-height: 100vh; }
 .project > .wrap { display: flex; flex-direction: column; gap: 110px; }
 .proj, .proj-head { width: min(540px, 100%); }
 .project.right .proj, .project.right .proj-head { align-self: flex-end; }
@@ -576,7 +576,7 @@ html:not(.webgl) .name-fallback { display: block; position: absolute; top: 30svh
 @media (max-width: 640px) { .sc-row { grid-template-columns: 1fr auto; } .sc-row span { grid-column: 1 / -1; grid-row: 2; } }
 
 /* ---------- More projects: an index list ---------- */
-.more-sec { min-height: 110vh; display: flex; align-items: center; }
+.more-sec { min-height: 100vh; display: flex; align-items: center; }
 .more-sec > .wrap { width: 100%; }
 .more { display: grid; border-bottom: 1px solid var(--border); }
 .mini { display: grid; grid-template-columns: 56px minmax(0, 1fr) 190px 230px 22px; gap: 20px; align-items: center; padding: 22px 0; cursor: pointer; text-align: left; color: inherit; font: inherit; background: none; border: 0; border-top: 1px solid var(--border); text-shadow: inherit; }
@@ -612,7 +612,7 @@ a.proof:hover span { text-decoration: underline; }
 .st-ticks i { width: 40px; height: 2px; background: var(--border-2); transition: background-color .4s; }
 .st-ticks i.on { background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
 /* with scroll choreography, the stage pins and the stories share one spot */
-.stories-on .how { height: 480vh; padding: 0; }
+.stories-on .how { height: 220vh; padding: 0; }
 .stories-on .how-stage { position: sticky; top: 0; height: 100svh; display: flex; align-items: center; }
 .stories-on .how-stage > .wrap { width: 100%; }
 .stories-on .stories { gap: 0; }
@@ -632,7 +632,7 @@ a.proof:hover span { text-decoration: underline; }
 @media (max-width: 800px) { .slot { grid-template-columns: 36px minmax(0, 1fr); gap: 6px 10px; } .slot .tools { grid-column: 2; } }
 
 /* ---------- Contact ---------- */
-.contact { min-height: 110svh; padding-bottom: 80px; display: flex; align-items: center; }
+.contact { min-height: 100svh; padding-bottom: 80px; display: flex; align-items: center; }
 .contact > .wrap { width: 100%; }
 .giant { font: 800 clamp(3rem, 10vw, 10.5rem)/.92 var(--display); font-stretch: 125%; letter-spacing: -.035em; margin: 0 0 48px; }
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; max-width: 1140px; }
@@ -747,8 +747,7 @@ dialog[open] { animation: pop .5s var(--ease); }
         <div class="intro-stats">
           <div><b data-count="9.36" data-dec="2">9.36</b>CGPA</div>
           <div><b data-count="2">2</b>Internships</div>
-          <div><b data-count="12">12</b>Projects</div>
-          <div><b data-count="337">337</b>Automated tests</div>
+          <div><b data-count="337">337</b>Tests in my IIT KGP pipeline</div>
         </div>
       </div>
     </div>
@@ -765,7 +764,7 @@ dialog[open] { animation: pop .5s var(--ease); }
           <div class="facts rv">
             <div class="fact"><i class="ph ph-graduation-cap"></i><div><span>Studying</span><b>B.E. Computer Science, BNMIT, 2027 (CGPA 9.36)</b></div></div>
             <div class="fact"><i class="ph ph-briefcase"></i><div><span>Right now</span><b>AI Intern, IIT Kharagpur</b></div></div>
-            <div class="fact"><i class="ph ph-stack"></i><div><span>I work across</span><b>AI and LLMs, backend, ML, automation</b></div></div>
+            <div class="fact"><i class="ph ph-stack"></i><div><span>Looking for</span><b>Software, forward deployed and AI engineering roles</b></div></div>
             <div class="fact"><i class="ph ph-map-pin"></i><div><span>Based in</span><b>Bangalore, India</b></div></div>
           </div>
         </div>
@@ -778,16 +777,13 @@ dialog[open] { animation: pop .5s var(--ease); }
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow"><b>02</b><span>What I do</span></p>
-        <h2 class="sw">Six things I can <span class="grad">build for you.</span></h2>
-        <p class="lead lines">I'm not tied to one kind of role. These are the areas I've actually shipped work in, with the project that proves each one.</p>
+        <h2 class="sw">Three things I <span class="grad">do well.</span></h2>
+        <p class="lead lines">The roles I'm after: software engineering, forward deployed engineering and AI engineering. Each comes with a project that proves it.</p>
       </div>
       <ol class="caps" data-glyphs>
-        <li class="cap rv" data-glyph="LLM"><span class="idx">01</span><h3>AI and LLM systems</h3><p>Chatbots, search over documents (RAG) and AI agents that cite their sources and get double-checked before anyone acts on them.</p><div class="proof-line">Proof: <b>LedgerGuard</b>, <b>IIT Kharagpur pipeline</b></div></li>
-        <li class="cap rv" data-glyph="API"><span class="idx">02</span><h3>Backend and full-stack apps</h3><p>APIs, databases and real-time web apps that keep working when connections drop or a provider goes down.</p><div class="proof-line">Proof: <b>agencydesk</b>, <b>Agent Console</b></div></li>
-        <li class="cap rv" data-glyph="ML"><span class="idx">03</span><h3>Machine learning</h3><p>Training and evaluating models for images and text, from medical image classification to plagiarism detection.</p><div class="proof-line">Proof: <b>Retinopathy classifier</b>, <b>Plagiarism detector</b></div></li>
-        <li class="cap rv" data-glyph="TRACK"><span class="idx">04</span><h3>Tracking and decision-making</h3><p>Following moving objects through noisy sensor data, and training AI agents that learn to make decisions together.</p><div class="proof-line">Proof: <b>Orbit Guard</b>, <b>Cooperative AI for sensors</b></div></li>
-        <li class="cap rv" data-glyph="IOT"><span class="idx">05</span><h3>Automation and IoT</h3><p>Workflows that move data from sensors to people: alerts, work orders and approvals, with a human in the loop.</p><div class="proof-line">Proof: <b>Incident automation</b>, <b>NPTEL IoT (top 5%)</b></div></li>
-        <li class="cap rv" data-glyph="EVAL"><span class="idx">06</span><h3>Honest evaluation</h3><p>Locked test data, leak checks and automated tests, so the numbers hold up when someone skeptical looks at them.</p><div class="proof-line">Proof: <b>337 tests in CI</b>, <b>published a result I lost</b></div></li>
+        <li class="cap rv" data-glyph="LLM"><span class="idx">01</span><h3>AI systems that check their own answers</h3><p>LLM apps, search over documents (RAG) and AI agents that cite their sources and get verified before anyone acts on them.</p><div class="proof-line">Proof: <b>LedgerGuard</b>, <b>IIT Kharagpur pipeline</b></div></li>
+        <li class="cap rv" data-glyph="API"><span class="idx">02</span><h3>Backend that keeps working</h3><p>APIs, databases and real-time apps that survive dropped connections, out-of-order messages and failing providers.</p><div class="proof-line">Proof: <b>Agent Console</b>, <b>agencydesk</b></div></li>
+        <li class="cap rv" data-glyph="SHIP"><span class="idx">03</span><h3>Real problems, end to end</h3><p>Taking a messy real-world problem, like reconciling payments or reading 100-page reports, and shipping a working system with numbers that hold up.</p><div class="proof-line">Proof: <b>LedgerGuard</b>, <b>Report AI</b></div></li>
       </ol>
     </div>
   </section>
@@ -938,7 +934,7 @@ dialog[open] { animation: pop .5s var(--ease); }
             <p class="kicker"><i class="ph ph-hand-pointing"></i>Try it yourself</p>
             <div class="demo-head" style="margin-bottom:0">
               <h3>Track moving objects through noise</h3>
-              <p>Each small dot is a radar reading. Some come from real objects, many are just noise. The tracker has to work out which is which, several times a second.</p>
+              <p><strong>An illustration:</strong> a simplified simulation that runs in your browser, not the real tracker. Each small dot is a radar reading. Some come from real objects, many are just noise. The tracker has to work out which is which, several times a second.</p>
             </div>
             <ol class="how-to">
               <li><span><b>Drag "Noise" up</b> to add more false readings.</span></li>
@@ -994,50 +990,23 @@ dialog[open] { animation: pop .5s var(--ease); }
     </div>
   </section>
 
-  <!-- ============ PROJECT 04: COOPERATIVE AI ============ -->
+  <!-- ============ PROJECT 04: AGENT CONSOLE ============ -->
   <section id="p4" class="project left" data-veil="l">
     <div class="wrap">
       <article class="proj">
-        <p class="meta"><span class="idx">04</span><span class="on">Final-year project</span><span>Public code</span></p>
-        <h3 class="pj-name">Sensor AI</h3>
-        <p class="pj-one lines">Can a <strong>team of AI agents</strong> run solar-powered sensors better than a simple rule? I built the test to find out honestly.</p>
-        <div class="pj-block"><h4>The problem</h4><p>Battery-powered sensors must decide when to measure and when to sleep to save energy. Teams of AI agents (multi-agent reinforcement learning) promise smarter teamwork, but do they beat a simple rule?</p></div>
+        <p class="meta"><span class="idx">04</span><span class="on">Real-time web app</span><span>Public code</span></p>
+        <h3 class="pj-name">Agent Console</h3>
+        <p class="pj-one lines">A chat interface for an AI agent that <strong>never loses or repeats a message</strong>, even when the connection drops.</p>
+        <div class="pj-stat"><b><span data-count="11">11</span></b><span>tests prove it handles out-of-order, duplicated and reversed messages, gaps, and resuming after a dropped connection.</span></div>
+        <div class="pj-block"><h4>The problem</h4><p>The AI server streams words and tool calls that can arrive out of order, twice, or not at all when the connection breaks. The screen must still show everything exactly once, in order.</p></div>
         <div class="pj-block"><h4>What I built</h4><ul>
-          <li>Trained three kinds of AI teams and compared them with seven simple rules.</li>
-          <li>Locked the test data and the win criteria before running anything, so I couldn't cherry-pick.</li>
-          <li>Shrank the model to run on small chips (0.25 to 6.8 ms per decision).</li>
+          <li>A message engine, kept outside React, that buffers by sequence number to put messages back in order and drop duplicates.</li>
+          <li>Automatic reconnect with back-off (0.5 to 10 seconds) that resumes from the last message shown.</li>
+          <li>Built and tested against the server's "chaos mode": dropped connections, reordered delivery and corrupt heartbeats.</li>
         </ul></div>
-        <div class="pj-vis" style="height:110px"><div class="v-mcu"><div class="chips17" aria-hidden="true"><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 fit"></span><span class="chip17 no"></span><span class="chip17 no"></span></div>
-          <p>The trained model fits on <b>15 of 17</b> common microcontrollers</p></div></div>
-        <p class="tools"><span>PyTorch</span><span>Reinforcement learning</span><span>ONNX</span><span>pytest</span></p>
-        <div class="pj-links"><a class="link-chip" href="https://github.com/RajivRanganath/FinalYearProject-MARL" target="_blank" rel="noopener"><i class="ph ph-github-logo"></i>Code</a><a class="link-chip" href="https://github.com/RajivRanganath/FinalYearProject-MARL/blob/main/FINAL_RESEARCH_REPORT.md" target="_blank" rel="noopener"><i class="ph ph-file-text"></i>Full report</a></div>
+        <p class="tools"><span>TypeScript</span><span>Next.js</span><span>React</span><span>WebSockets</span><span>Vitest</span><span>Docker</span></p>
+        <div class="pj-links"><a class="link-chip" href="https://github.com/RajivRanganath/Agent_assignment" target="_blank" rel="noopener"><i class="ph ph-github-logo"></i>Code</a></div>
       </article>
-
-      <div class="demo-block">
-        <div class="demo-head">
-          <p class="kicker"><i class="ph ph-scales"></i>The honest result</p>
-          <h3>The simple rule won. I published it anyway.</h3>
-          <p>My best AI team against a one-line rule, on 30 test runs that were fixed before I looked at any results.</p>
-        </div>
-        <div class="scorecard rv">
-          <div class="sc-row"><b>Energy used</b><span>Less is better</span><em class="win rule"><i class="ph-fill ph-x-circle"></i>Rule wins</em></div>
-          <div class="sc-row"><b>Wasted measurements</b><span>Less is better</span><em class="win rule"><i class="ph-fill ph-x-circle"></i>Rule wins</em></div>
-          <div class="sc-row"><b>Overall score</b><span>The main target</span><em class="win rule"><i class="ph-fill ph-x-circle"></i>Rule wins</em></div>
-          <div class="sc-row"><b>Events caught</b><span>More is better</span><em class="win tie"><i class="ph ph-minus-circle"></i>Too close to call</em></div>
-          <div class="sc-row"><b>Area covered</b><span>More is better</span><em class="win tie"><i class="ph ph-minus-circle"></i>Too close to call</em></div>
-          <div class="sc-row"><b>Data freshness</b><span>How recent the readings are</span><em class="win mine"><i class="ph-fill ph-check-circle"></i>My AI wins</em></div>
-          <p class="sc-sum">Rule 3, my AI 1, ties 2. <strong>Knowing when a simple solution is better is part of the job.</strong></p>
-          <details><summary>See the statistics</summary><div class="tbl-scroll"><table>
-            <tr><th>Metric</th><th>My AI minus rule</th><th>95% CI</th><th>Holm p</th></tr>
-            <tr><td>Energy used</td><td>+0.75 (more)</td><td>0.68 to 0.83</td><td>4.1e-18</td></tr>
-            <tr><td>Wasted measurements</td><td>+4.27 (more)</td><td>3.40 to 5.14</td><td>6.4e-10</td></tr>
-            <tr><td>Overall score</td><td>&minus;4.95</td><td>&minus;8.44 to &minus;1.46</td><td>0.035</td></tr>
-            <tr><td>Events caught</td><td>&minus;0.0027</td><td>&minus;0.0067 to 0.0013</td><td>0.37</td></tr>
-            <tr><td>Area covered</td><td>+0.0009</td><td>&minus;0.0014 to 0.0032</td><td>0.45</td></tr>
-            <tr><td>Data freshness</td><td>0.32 fresher</td><td>0.18 to 0.46</td><td>0.00048</td></tr>
-          </table></div></details>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1047,7 +1016,7 @@ dialog[open] { animation: pop .5s var(--ease); }
       <div class="sec-head">
         <p class="eyebrow"><b>05</b><span>More projects</span></p>
         <h2 class="sw">Eight more, <span class="grad">across the stack.</span></h2>
-        <p class="lead lines">Backend, real-time apps, research, automation and ML. Open any one for the details.</p>
+        <p class="lead lines">Backend, research, automation and ML. Open any one for the details.</p>
       </div>
       <div class="more" id="moreGrid"></div>
       <p style="margin-top:26px"><a class="link-chip" href="https://github.com/RajivRanganath" target="_blank" rel="noopener"><i class="ph ph-github-logo"></i>All code on GitHub</a></p>
@@ -1064,15 +1033,7 @@ dialog[open] { animation: pop .5s var(--ease); }
         </div>
         <div class="stories">
           <article class="story">
-            <div class="st-left"><span class="st-n">01 / 05</span><span class="st-verdict">Caught my own bug</span></div>
-            <div class="st-right">
-              <h3>I threw out my own results when they were wrong.</h3>
-              <p>While auditing my final-year project, I found a training setting had been silently overridden. Every result from that run was invalid, so I published a record saying so instead of the numbers.</p>
-              <a class="proof" href="https://github.com/RajivRanganath/FinalYearProject-MARL/blob/main/results/training_v4/INVALIDATED.json" target="_blank" rel="noopener"><span>See the invalidation record</span><i class="ph ph-arrow-up-right"></i></a>
-            </div>
-          </article>
-          <article class="story">
-            <div class="st-left"><span class="st-n">02 / 05</span><span class="st-verdict">Fixed the test first</span></div>
+            <div class="st-left"><span class="st-n">01 / 02</span><span class="st-verdict">Fixed the test first</span></div>
             <div class="st-right">
               <h3>I made sure the scores were real before improving them.</h3>
               <p>At IIT Kharagpur, the scoring code I inherited leaked the answers and contained made-up data. I rebuilt it so every answer must point to its source, before tuning anything.</p>
@@ -1080,23 +1041,7 @@ dialog[open] { animation: pop .5s var(--ease); }
             </div>
           </article>
           <article class="story">
-            <div class="st-left"><span class="st-n">03 / 05</span><span class="st-verdict">Published a loss</span></div>
-            <div class="st-right">
-              <h3>When a simple rule beat my AI, I said so.</h3>
-              <p>My final-year AI team lost to a one-line rule on the main score. The report leads with that result, with the statistics to back it.</p>
-              <a class="proof" href="#p4"><span>See the scorecard in Project 04</span><i class="ph ph-arrow-up"></i></a>
-            </div>
-          </article>
-          <article class="story">
-            <div class="st-left"><span class="st-n">04 / 05</span><span class="st-verdict">Checked the tools too</span></div>
-            <div class="st-right">
-              <h3>I don't trust a tool just because everyone uses it.</h3>
-              <p>I found a bug in an open-source simulator we relied on, and noticed that an "AI discovers prices" result was really a fixed formula the AI couldn't change. I reported both instead of building on them.</p>
-              <span class="proof private"><i class="ph ph-lock-simple"></i>Internship work, private code</span>
-            </div>
-          </article>
-          <article class="story">
-            <div class="st-left"><span class="st-n">05 / 05</span><span class="st-verdict">Graded myself harshly</span></div>
+            <div class="st-left"><span class="st-n">02 / 02</span><span class="st-verdict">Graded myself harshly</span></div>
             <div class="st-right">
               <h3>I measured my own AI agent, and it scored 22%.</h3>
               <p>My research agent studied 100 software apps. When I hand-checked a sample, only 22% of its answers were right. I published that, fixed the data to 100% on that sample, and listed what's still unchecked.</p>
@@ -1104,7 +1049,7 @@ dialog[open] { animation: pop .5s var(--ease); }
             </div>
           </article>
         </div>
-        <div class="st-ticks" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <div class="st-ticks" aria-hidden="true"><i class="on"></i><i></i></div>
       </div>
     </div>
   </section>
@@ -1118,11 +1063,11 @@ dialog[open] { animation: pop .5s var(--ease); }
       </div>
       <div class="skills">
         <div class="slot rv"><span class="idx">01</span><h3>Languages</h3><p class="tools"><span>Python</span><span>TypeScript</span><span>JavaScript</span><span>SQL</span><span>Java</span><span>C</span></p></div>
-        <div class="slot rv"><span class="idx">02</span><h3>AI and LLMs</h3><p class="tools"><span>RAG</span><span>LLM evaluation</span><span>LangChain</span><span>FAISS</span><span>Hugging Face</span><span>Groq, Gemini, Ollama APIs</span></p></div>
+        <div class="slot rv"><span class="idx">02</span><h3>AI and LLMs</h3><p class="tools"><span>RAG</span><span>LLM evaluation</span><span>FAISS</span><span>Hugging Face</span><span>Groq, Gemini, Ollama APIs</span></p></div>
         <div class="slot rv"><span class="idx">03</span><h3>Machine learning</h3><p class="tools"><span>PyTorch</span><span>TensorFlow</span><span>scikit-learn</span><span>OpenCV</span><span>pandas</span><span>NumPy</span><span>Reinforcement learning</span></p></div>
-        <div class="slot rv"><span class="idx">04</span><h3>Backend and data</h3><p class="tools"><span>FastAPI</span><span>REST APIs</span><span>WebSockets</span><span>PostgreSQL</span><span>SQLAlchemy</span><span>MongoDB</span></p></div>
+        <div class="slot rv"><span class="idx">04</span><h3>Backend and data</h3><p class="tools"><span>FastAPI</span><span>REST APIs</span><span>WebSockets</span><span>PostgreSQL</span><span>SQLAlchemy</span><span>MongoDB</span><span>AWS basics (EC2, S3, Lambda, IAM)</span></p></div>
         <div class="slot rv"><span class="idx">05</span><h3>Frontend</h3><p class="tools"><span>React</span><span>Next.js</span><span>Three.js</span><span>Streamlit</span></p></div>
-        <div class="slot rv"><span class="idx">06</span><h3>Testing, DevOps and automation</h3><p class="tools"><span>pytest</span><span>GitHub Actions</span><span>Docker</span><span>Jenkins</span><span>Git</span><span>UiPath</span><span>Node-RED</span><span>MQTT</span></p></div>
+        <div class="slot rv"><span class="idx">06</span><h3>DevOps and tools</h3><p class="tools"><span>pytest</span><span>GitHub Actions</span><span>Docker</span><span>Jenkins</span><span>Git</span><span>UiPath</span><span>Node-RED</span><span>MQTT</span></p></div>
       </div>
     </div>
   </section>
@@ -1135,12 +1080,13 @@ dialog[open] { animation: pop .5s var(--ease); }
       <div class="contact-grid">
         <div>
           <p class="lead lines">Let's find out. I'm graduating in May 2027 and open to full-time roles and internships. Email is the fastest way to reach me.</p>
-          <div class="open-to"><p class="col-h">Open to</p><p class="tools"><span>Software engineering</span><span>AI / ML engineering</span><span>Backend</span><span>Data</span><span>Research</span><span>Automation</span></p></div>
+          <div class="open-to"><p class="col-h">Open to</p><p class="tools"><span>Software engineering</span><span>Forward deployed engineering</span><span>AI engineering</span><span>Backend</span></p></div>
           <div class="mail"><a href="mailto:rajivranganath3@gmail.com" id="mail">rajivranganath3@gmail.com</a><button class="copy magnetic" id="copyMail">Copy</button></div>
           <div class="socials">
             <a class="btn btn-ghost btn-sm" href="https://www.linkedin.com/in/rajiv-ranganath-8b0bb1285" target="_blank" rel="noopener"><i class="ph ph-linkedin-logo"></i>LinkedIn</a>
             <a class="btn btn-ghost btn-sm" href="https://github.com/RajivRanganath" target="_blank" rel="noopener"><i class="ph ph-github-logo"></i>GitHub</a>
             <a class="btn btn-ghost btn-sm" href="resume.pdf" download><i class="ph ph-file-arrow-down"></i>Resume</a>
+            <a class="btn btn-ghost btn-sm" href="resume-ai.pdf" download><i class="ph ph-file-arrow-down"></i>AI/ML resume</a>
           </div>
         </div>
         <form class="rv" id="contactForm" novalidate>
