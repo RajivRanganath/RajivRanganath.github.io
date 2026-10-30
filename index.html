@@ -787,7 +787,7 @@ dialog[open] { animation: pop .5s var(--ease); }
         <li class="cap rv" data-glyph="ML"><span class="idx">03</span><h3>Machine learning</h3><p>Training and evaluating models for images and text, from medical image classification to plagiarism detection.</p><div class="proof-line">Proof: <b>Retinopathy classifier</b>, <b>Plagiarism detector</b></div></li>
         <li class="cap rv" data-glyph="TRACK"><span class="idx">04</span><h3>Tracking and decision-making</h3><p>Following moving objects through noisy sensor data, and training AI agents that learn to make decisions together.</p><div class="proof-line">Proof: <b>Orbit Guard</b>, <b>Cooperative AI for sensors</b></div></li>
         <li class="cap rv" data-glyph="IOT"><span class="idx">05</span><h3>Automation and IoT</h3><p>Workflows that move data from sensors to people: alerts, work orders and approvals, with a human in the loop.</p><div class="proof-line">Proof: <b>Incident automation</b>, <b>NPTEL IoT (top 5%)</b></div></li>
-        <li class="cap rv" data-glyph="TEST"><span class="idx">06</span><h3>Testing and honest evaluation</h3><p>Automated tests, locked test data and leak checks, so the numbers hold up when someone skeptical looks at them.</p><div class="proof-line">Proof: <b>337 tests in CI</b>, <b>published a result I lost</b></div></li>
+        <li class="cap rv" data-glyph="EVAL"><span class="idx">06</span><h3>Honest evaluation</h3><p>Locked test data, leak checks and automated tests, so the numbers hold up when someone skeptical looks at them.</p><div class="proof-line">Proof: <b>337 tests in CI</b>, <b>published a result I lost</b></div></li>
       </ol>
     </div>
   </section>
@@ -820,8 +820,8 @@ dialog[open] { animation: pop .5s var(--ease); }
             <h3>Deep Learning Intern</h3>
             <p class="org">E2E Management Services</p>
             <ul>
-              <li>Four-week programme in deep learning and reinforcement learning.</li>
-              <li>Final project: a model that grades <strong>diabetic eye disease from retina photos</strong> into five levels.</li>
+              <li>Built a model that grades <strong>diabetic eye disease from retina photos</strong> into five severity levels, by fine-tuning ResNet-152 on the APTOS 2019 dataset.</li>
+              <li>Built a Streamlit app that <strong>summarises legal documents with an LLM</strong> (Groq), flags GDPR risks and key clauses, and answers questions about the document.</li>
             </ul>
           </article>
         </div>
@@ -853,9 +853,10 @@ dialog[open] { animation: pop .5s var(--ease); }
           <li>A rules engine that settles every case it can prove on its own, with no AI (54 of 85 test cases).</li>
           <li>An AI investigator for the rest, which can only <em>suggest</em> an explanation.</li>
           <li>An "Evidence Gate": 7 checks that re-prove every AI claim from the records before anything is closed.</li>
+          <li>Later ran it on <strong>NVIDIA Nemotron 3 Super</strong> for the Nebius x NVIDIA Global AI Hackathon (submitted): 94.1% correct vs 89.4% with rules alone, 16 cases closed automatically, all correct, and zero wrong closes.</li>
         </ul></div>
         <p class="tools"><span>Python</span><span>FastAPI</span><span>LLMs</span><span>pytest</span></p>
-        <div class="pj-links"><a class="link-chip" href="https://github.com/RajivRanganath/ledgerguard" target="_blank" rel="noopener"><i class="ph ph-github-logo"></i>Code</a><a class="link-chip" href="#ledgerDemo"><i class="ph ph-play-circle"></i>See it work below</a></div>
+        <div class="pj-links"><a class="link-chip" href="https://github.com/RajivRanganath/ledgerguard" target="_blank" rel="noopener"><i class="ph ph-github-logo"></i>Code</a><a class="link-chip" href="https://github.com/RajivRanganath/ledgerguard-nemotron" target="_blank" rel="noopener"><i class="ph ph-github-logo"></i>Nemotron version</a><a class="link-chip" href="https://youtu.be/FovmxS4lkKw" target="_blank" rel="noopener"><i class="ph ph-youtube-logo"></i>Demo video</a><a class="link-chip" href="#ledgerDemo"><i class="ph ph-play-circle"></i>See it work below</a></div>
       </article>
 
       <div class="demo-block" id="ledgerDemo" data-veil="c">
@@ -920,7 +921,7 @@ dialog[open] { animation: pop .5s var(--ease); }
         <p class="meta"><span class="idx">02</span><span class="on">Space tracking</span><span>Public code</span></p>
         <h3 class="pj-name">Orbit Guard AI</h3>
         <p class="pj-one lines">Tracks space debris from <strong>noisy radar readings</strong> and warns before two objects get too close.</p>
-        <div class="pj-stat"><b>+<span data-count="11">11</span> to <span data-count="14">14</span></b><span>points better matching accuracy in heavy noise with the probabilistic method, with every object kept on track.</span></div>
+        <div class="pj-stat"><b>+<span data-count="6.7" data-dec="1">6.7</span></b><span>points better matching in heavy clutter with the probabilistic method (95% CI 5.9 to 7.4), ahead in 94 of 95 seeded runs. About half its matches were clutter, and I report that.</span></div>
         <div class="pj-block"><h4>The problem</h4><p>Radar gives scattered dots with false alarms mixed in. Every few seconds you have to work out which dot belongs to which object, and where each one goes next.</p></div>
         <div class="pj-block"><h4>What I built</h4><ul>
           <li>Orbit prediction that accounts for Earth's shape, air drag and sunlight pressure, checked against physics to about one part in a trillion over 24 hours.</li>
